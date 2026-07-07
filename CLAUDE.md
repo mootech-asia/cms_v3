@@ -117,11 +117,8 @@ vue3-app/src/
 | `'Sports'` | Sports |
 | `'Promotion'` | Promotion |
 
-### 原始 Prototype 位置
-- `components.jsx` — 主要元件（Sidebar, TopBar, Hero, GameCard, Rail 等）
-- `account-pages.jsx` — 帳戶頁面（AccountOverview, DepositPage, WithdrawalPage 等）
-- `styles.css` — 完整 CSS（4449 行）
-- `index.html` — App 入口與整合
+### 原始 Prototype
+已刪除（原 `components.jsx`、`account-pages.jsx`、`styles.css`、`index.html` 等），需要時可從 git 歷史找回。
 
 ---
 

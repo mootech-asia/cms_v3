@@ -32,12 +32,10 @@ jobs:
           npm ci
           npx vite build --base=/cms_v3/
 
-      - name: Assemble site (Vue app at /, prototype at /prototype/)
+      - name: Assemble site
         run: |
-          mkdir -p _site/prototype
+          mkdir -p _site
           cp -r vue3-app/dist/. _site/
-          cp index.html standalone.html styles.css data.jsx components.jsx account-pages.jsx tweaks-panel.jsx _site/prototype/
-          cp -r assets _site/prototype/assets
           touch _site/.nojekyll
 
       - name: Push to gh-pages branch
