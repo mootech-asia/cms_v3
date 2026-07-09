@@ -66,9 +66,9 @@
 
     <!-- 首頁區塊 -->
     <template v-else-if="activeCat === 'Lobby'">
-      <Hero />
-      <PromoRibbon v-if="showPromos" />
-      <RewardsBanner v-if="user" :user="user" />
+      <Hero v-if="catTab !== 'About Us'" />
+      <PromoRibbon v-if="showPromos && catTab !== 'About Us'" />
+      <RewardsBanner v-if="user && catTab !== 'About Us'" :user="user" />
       <Promos v-if="showPromos" v-model:active="catTab" />
 
       <!-- Lobby tab -->
