@@ -11,7 +11,7 @@
         v-model:activeCat="activeCat"
         :user="user"
         @sign-in="showSignIn = true"
-        @support="showSupport = true"
+        @support="activeCat = 'Lobby'; catTab = 'About Us'"
       />
     </template>
 

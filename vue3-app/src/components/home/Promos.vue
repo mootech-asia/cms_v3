@@ -45,11 +45,6 @@
             <rect x="3" y="9" width="18" height="5" rx="1" />
             <path d="M5 14v7h14v-7M12 9v12M9 9a2 2 0 1 1 3-2 2 2 0 1 1 3 2" />
           </g>
-          <g v-else-if="tab.icon === 'info'"
-            stroke="currentColor" stroke-width="1.7" fill="none" stroke-linejoin="round" stroke-linecap="round">
-            <circle cx="12" cy="12" r="9" />
-            <path d="M12 11v5M12 8h.01" />
-          </g>
         </svg>
       </span>
       {{ tab.name }}
@@ -72,6 +67,5 @@ const tabs = [
   { name: 'Live',       icon: 'tv'     },
   { name: 'Fish',       icon: 'fish'   },
   { name: 'Promotion',  icon: 'gift'   },
-  { name: 'About Us',   icon: 'info'   },
 ];
 </script>
