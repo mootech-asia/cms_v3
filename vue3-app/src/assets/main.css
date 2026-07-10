@@ -2720,10 +2720,11 @@ select.twk-field {
 }
 .ap-amount-btn:hover:not(.active) { border-color: var(--accent); color: #fff; }
 .ap-amount-btn.active {
-  background: #facc15;
-  color: #1a1500;
-  border-color: #facc15;
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
   font-weight: 700;
+  box-shadow: 0 0 12px color-mix(in oklch, var(--accent) 45%, transparent);
 }
 .ap-input {
   display: block;
@@ -4594,3 +4595,48 @@ select.twk-field {
 [data-theme="light"] .pi-success-title,
 [data-theme="light"] .ap-wallet-label,
 [data-theme="light"] .ap-wallet-amt { color: var(--text); }
+
+
+/* ── Deposit — payment method tabs (Bank Card / Crypto Wallet) ── */
+.dp-method-tabs { display: flex; gap: 12px; margin-bottom: 20px; }
+.dp-method-tabs button {
+  flex: 1; display: flex; align-items: center; justify-content: center; gap: 10px;
+  min-height: 52px; padding: 12px 18px;
+  border: 1px solid var(--line-hi); border-radius: 10px;
+  background: var(--bg-elev); color: var(--text-mid);
+  font: inherit; font-weight: 600; font-size: 14px; cursor: pointer;
+  transition: border-color .15s, color .15s, background .15s, box-shadow .15s;
+}
+.dp-method-tabs button:hover:not(.active) { border-color: var(--accent); color: var(--text); }
+.dp-method-tabs button.active {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 0 14px color-mix(in oklch, var(--accent) 42%, transparent);
+}
+
+/* Crypto Wallet form */
+.dp-crypto-method {
+  display: inline-flex; align-items: center; gap: 10px;
+  width: max-content; margin: 20px 0;
+  padding: 10px 16px; border-radius: 10px;
+  background: color-mix(in oklch, var(--accent) 16%, var(--bg-elev));
+  border: 1px solid color-mix(in oklch, var(--accent) 30%, var(--line));
+  color: var(--accent-2); font-weight: 600;
+}
+.dp-usdt { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: #12a97b; color: #fff; font-weight: 700; }
+.dp-crypto-grid { display: grid; grid-template-columns: 190px minmax(0, 1fr); gap: 14px 20px; align-items: center; }
+.dp-crypto-grid > label { font-weight: 600; color: var(--text); font-size: 14px; }
+.dp-converted { display: flex; align-items: center; gap: 14px; }
+.dp-converted strong { color: var(--text); }
+.dp-rate { margin: 12px 0 24px; color: var(--text-mid); font-size: 13.5px; }
+.dp-rate strong { color: var(--text); }
+.dp-crypto-promo { align-items: center; text-align: left; cursor: pointer; }
+.dp-crypto-title { font-weight: 700; color: #fff; font-size: 14px; }
+.dp-crypto-amt { margin-left: auto; color: var(--accent-2); font-size: 14px; font-weight: 600; white-space: nowrap; }
+[data-theme="light"] .dp-crypto-title { color: var(--text); }
+@media (max-width: 700px) {
+  .dp-crypto-grid { grid-template-columns: 1fr; gap: 8px; }
+  .dp-crypto-promo { flex-wrap: wrap; }
+  .dp-crypto-amt { width: 100%; margin-left: 34px; }
+}

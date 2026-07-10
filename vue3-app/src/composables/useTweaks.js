@@ -21,14 +21,23 @@ export const TWEAK_DEFAULTS = {
 export function useTweaks(defaults = TWEAK_DEFAULTS) {
   const t = reactive({ ...defaults });
 
+  // 還原上次選擇的主題
+  try {
+    const saved = localStorage.getItem('cms_theme');
+    if (saved === 'dark' || saved === 'light') t.theme = saved;
+  } catch (e) { /* ignore */ }
+
   function setTweak(key, val) {
     t[key] = val;
   }
 
-  // 主題套用到 document
+  // 主題套用到 document + 記住選擇
   watch(
     () => t.theme,
-    (theme) => document.documentElement.setAttribute('data-theme', theme),
+    (theme) => {
+      document.documentElement.setAttribute('data-theme', theme);
+      try { localStorage.setItem('cms_theme', theme); } catch (e) { /* ignore */ }
+    },
     { immediate: true }
   );
 

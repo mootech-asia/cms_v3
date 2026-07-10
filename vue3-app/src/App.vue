@@ -20,10 +20,12 @@
       <TopBar
         :user="user"
         :balance="balance"
+        :theme="t.theme"
         @sign-in="showSignIn = true"
         @logout="user = null"
-        @home="activeCat = 'Lobby'"
+        @home="activeCat = 'Lobby'; catTab = 'Lobby'"
         @navigate="(cat) => activeCat = cat"
+        @toggle-theme="setTweak('theme', t.theme === 'dark' ? 'light' : 'dark')"
       />
     </template>
 
@@ -207,7 +209,7 @@ import SupportPage            from '@/components/account/SupportPage.vue';
 import { useTweaks }          from '@/composables/useTweaks.js';
 import { GAMES, RECENTLY_PLAYED } from '@/data/index.js';
 
-const { t } = useTweaks();
+const { t, setTweak } = useTweaks();
 
 const openGame          = ref(null);
 const sidebarCollapsed  = ref(false);

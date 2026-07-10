@@ -10,6 +10,17 @@
       <!-- 右側操作區 -->
       <div class="header-actions">
 
+        <!-- 明暗主題切換 -->
+        <button class="tb-icon-btn" :aria-label="theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'" :title="theme === 'dark' ? 'Light mode' : 'Dark mode'" @click="emit('toggle-theme')">
+          <svg v-if="theme === 'dark'" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4.2" />
+            <path d="M12 2v2.4M12 19.6V22M4.2 4.2l1.7 1.7M18.1 18.1l1.7 1.7M2 12h2.4M19.6 12H22M4.2 19.8l1.7-1.7M18.1 5.9l1.7-1.7" />
+          </svg>
+          <svg v-else width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z" />
+          </svg>
+        </button>
+
         <!-- 已登入 -->
         <template v-if="user">
           <div class="tb-balance">
@@ -103,9 +114,10 @@ import { ref, computed, onMounted, onUnmounted } from 'vue';
 const props = defineProps({
   user:    { type: Object, default: null },
   balance: { type: Number, default: 0   },
+  theme:   { type: String, default: 'dark' },
 });
 
-const emit = defineEmits(['sign-in', 'logout', 'home', 'navigate']);
+const emit = defineEmits(['sign-in', 'logout', 'home', 'navigate', 'toggle-theme']);
 
 const scrolled  = ref(false);
 const menuOpen  = ref(false);
