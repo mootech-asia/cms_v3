@@ -2721,11 +2721,11 @@ select.twk-field {
 }
 .ap-amount-btn:hover:not(.active) { border-color: var(--accent); color: #fff; }
 .ap-amount-btn.active {
-  background: var(--accent);
+  background: linear-gradient(180deg, #38bdf8 0%, #2473ff 60%, #1e5fd8 100%);
   color: #fff;
-  border-color: var(--accent);
+  border-color: transparent;
   font-weight: 700;
-  box-shadow: 0 0 12px color-mix(in oklch, var(--accent) 45%, transparent);
+  box-shadow: 0 0 12px color-mix(in oklch, #2473ff 45%, transparent);
 }
 .ap-input {
   display: block;
@@ -4610,10 +4610,10 @@ select.twk-field {
 }
 .dp-method-tabs button:hover:not(.active) { border-color: var(--accent); color: var(--text); }
 .dp-method-tabs button.active {
-  border-color: var(--accent);
-  background: var(--accent);
+  border-color: transparent;
+  background: linear-gradient(180deg, #38bdf8 0%, #2473ff 60%, #1e5fd8 100%);
   color: #fff;
-  box-shadow: 0 0 14px color-mix(in oklch, var(--accent) 42%, transparent);
+  box-shadow: 0 0 16px color-mix(in oklch, #2473ff 40%, transparent);
 }
 
 /* Crypto Wallet form */
