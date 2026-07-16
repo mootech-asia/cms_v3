@@ -5,7 +5,8 @@
     <!-- Hero -->
     <div class="ap-hero">
       <div class="ap-hero-bg" aria-hidden="true"></div>
-      <div class="ap-hero-avatar">
+      <div class="ap-hero-main">
+        <div class="ap-hero-avatar">
         <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round">
           <circle cx="12" cy="9" r="3.5" />
           <path d="M5 20a7 7 0 0 1 14 0" />
@@ -36,11 +37,19 @@
           </button>
         </div>
       </div>
-      <div class="ap-hero-rollover">
-        <div class="ap-rollover-title">Rollover</div>
-        <div class="ap-rollover-label">Remaining Turnover Amount:</div>
-        <div class="ap-rollover-amt">₩16,517.41</div>
+        <div class="ap-hero-rollover">
+          <div class="ap-rollover-title">Rollover</div>
+          <div class="ap-rollover-label">Remaining Turnover Amount:</div>
+          <div class="ap-rollover-amt">₩16,517.41</div>
+        </div>
       </div>
+      <LevelProgress
+        class="ap-level-progress"
+        label="Rewards · Day 27, 03:26 UTC"
+        :percent="62"
+        current="Unranked"
+        next="Bronze"
+      />
     </div>
 
     <!-- Quick actions + Banking -->
@@ -133,6 +142,7 @@
 
 <script setup>
 import { ref, computed } from 'vue';
+import LevelProgress from '@/components/ui/LevelProgress.vue';
 
 const props = defineProps({
   user:    { type: Object, default: null },
