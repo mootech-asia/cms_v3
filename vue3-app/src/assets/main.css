@@ -2805,17 +2805,22 @@ select.twk-field {
   display: inline-flex; align-items: center; gap: 6px;
   margin-bottom: 14px;
   padding: 8px 14px 8px 10px;
-  border-radius: 10px;
-  border: 1px solid var(--line-hi);
-  background: linear-gradient(180deg, var(--bg-card-hi) 0%, var(--bg-card) 100%);
-  color: var(--text-mid);
+  border-radius: var(--radius-control);
+  border: 1px solid var(--control-border);
+  background: var(--control-bg);
+  color: var(--control-text);
   font: inherit;
-  font-weight: 600;
-  font-size: 13.5px;
+  font-weight: var(--weight-semibold);
+  font-size: var(--type-button);
   cursor: pointer;
-  transition: color .15s, border-color .15s;
+  transition:
+    color var(--duration-fast),
+    border-color var(--duration-fast);
 }
-.ap-back:hover { color: #fff; border-color: var(--accent); }
+.ap-back:hover {
+  color: var(--control-hover-text);
+  border-color: var(--control-hover-border);
+}
 
 
 /* withdrawal — saved bank account (logged in) */
