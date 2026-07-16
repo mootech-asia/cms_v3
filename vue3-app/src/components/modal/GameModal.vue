@@ -12,7 +12,7 @@
       </div>
 
       <div class="modal-body">
-        <div class="game-modal-art" :style="{ '--gm-bg': game.bg }">
+        <div class="game-modal-art">
           [ {{ game.title.toUpperCase() }} GAMEPLAY PREVIEW ]
         </div>
         <div style="color:var(--text-mid);font-size:13.5px;line-height:1.6">
