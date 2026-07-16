@@ -75,9 +75,29 @@
 
       <!-- Lobby tab -->
       <template v-if="catTab === 'Lobby'">
-        <Rail title="Recently played" :games="RECENTLY_PLAYED" :count="RECENTLY_PLAYED.length" @open="openGame = $event" />
-        <Rail title="Slots"       icon="fire" :games="GAMES.slots" @open="openGame = $event" />
-        <Rail title="Live Casino" icon="bolt" :games="GAMES.live"  @open="openGame = $event" />
+        <Rail
+          title="Recently played"
+          :games="RECENTLY_PLAYED"
+          :count="RECENTLY_PLAYED.length"
+          :show-actions="false"
+          @open="openGame = $event"
+        />
+        <Rail
+          title="Slots"
+          icon="fire"
+          :games="GAMES.slots"
+          see-all-tab="Slots"
+          @see-all="catTab = $event"
+          @open="openGame = $event"
+        />
+        <Rail
+          title="Live Casino"
+          icon="bolt"
+          :games="GAMES.live"
+          see-all-tab="Live"
+          @see-all="catTab = $event"
+          @open="openGame = $event"
+        />
         <FilteredGrid @open="openGame = $event" />
         <Leaderboard />
         <Tournaments />
@@ -96,6 +116,7 @@
       <CategoryView v-else-if="catTab === 'Mini Games'"
         title="Mini Games" icon="star"
         :games="GAMES.originals"
+        enable-load-more
         @open="openGame = $event"
       />
 
@@ -103,6 +124,7 @@
       <CategoryView v-else-if="catTab === 'Slots'"
         title="Slots" icon="fire"
         :games="GAMES.slots"
+        enable-load-more
         @open="openGame = $event"
       />
 
@@ -110,6 +132,7 @@
       <CategoryView v-else-if="catTab === 'Live'"
         title="Live" icon="bolt"
         :games="GAMES.live"
+        enable-load-more
         @open="openGame = $event"
       />
 
@@ -117,6 +140,7 @@
       <CategoryView v-else-if="catTab === 'Fish'"
         title="Fish"
         :games="GAMES.slots"
+        enable-load-more
         @open="openGame = $event"
       />
 
@@ -124,7 +148,7 @@
       <Sports v-else-if="catTab === 'Sports'" />
 
       <!-- Promotion tab -->
-      <Promotion v-else-if="catTab === 'Promotion'" />
+      <Promotion v-else-if="catTab === 'Promotion'" enable-load-more />
 
       <!-- About Us / FAQ tab (inline) -->
       <SupportPage v-else-if="catTab === 'About Us'" inline />
