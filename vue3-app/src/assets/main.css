@@ -4079,6 +4079,7 @@ select.twk-field {
 [data-theme="light"] .rt:hover {
   border-color: var(--accent) !important;
   background: #ffffff !important;
+  color: var(--accent) !important;
 }
 /* keep active states as defined (accent outline) */
 [data-theme="light"] .cv-tab.active,
@@ -4104,9 +4105,6 @@ select.twk-field {
 [data-theme="light"] .btn:hover,
 [data-theme="light"] .cv-tab:hover,
 [data-theme="light"] .cat-tab:hover,
-[data-theme="light"] .rt:hover {
-  color: var(--accent) !important;
-}
 
 
 /* ── shared centered section pill (Deposit / Withdrawal / Banking) ── */
