@@ -9,6 +9,7 @@
     </div>
 
     <div
+      v-if="showFilterTabs"
       class="cv-tabs"
       style="display:flex;flex-wrap:nowrap;overflow-x:auto;white-space:nowrap;scrollbar-width:none"
     >
@@ -62,6 +63,7 @@ const props = defineProps({
   games:            { type: Array,  default: () => [] },
   enableLoadMore:   { type: Boolean, default: false },
   pageSize:         { type: Number,  default: 10 },
+  showFilterTabs:   { type: Boolean, default: true },
   showProviderTabs: { type: Boolean, default: true },
 });
 const emit = defineEmits(['open']);
@@ -100,7 +102,7 @@ function loadMore() {
 }
 
 watch(
-  () => [props.title, props.games, props.showProviderTabs],
+  () => [props.title, props.games, props.showFilterTabs, props.showProviderTabs],
   () => {
     filter.value = 'All';
     visibleCount.value = props.pageSize;
