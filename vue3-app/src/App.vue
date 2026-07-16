@@ -33,7 +33,12 @@
 
     <!-- Account pages -->
     <AccountOverview v-if="activeCat === 'Account Overview'"
-      :user="user" :balance="balance"
+      :user="user" :balance="balance" :nickname="nickname"
+      @navigate="activeCat = $event"
+    />
+    <EditNickname v-else-if="activeCat === 'Edit Nickname'"
+      :nickname="nickname"
+      @save="nickname = $event"
       @navigate="activeCat = $event"
     />
     <DepositPage v-else-if="activeCat === 'DepositForm'"
@@ -222,6 +227,7 @@ import Providers              from '@/components/lobby/Providers.vue';
 import GameModal              from '@/components/modal/GameModal.vue';
 import SignInModal            from '@/components/modal/SignInModal.vue';
 import AccountOverview        from '@/components/account/AccountOverview.vue';
+import EditNickname           from '@/components/account/EditNickname.vue';
 import DepositPage            from '@/components/account/DepositPage.vue';
 import WithdrawalPage         from '@/components/account/WithdrawalPage.vue';
 import PersonalInfo           from '@/components/account/PersonalInfo.vue';
@@ -244,6 +250,7 @@ const catTab            = ref('Lobby');
 const showSignIn        = ref(false);
 const balance           = ref(1284.32);
 const user              = ref(null);
+const nickname          = ref('Meow');
 
 // showPromos 從 tweaks 驅動
 const showPromos = computed(() => t.showPromos);
