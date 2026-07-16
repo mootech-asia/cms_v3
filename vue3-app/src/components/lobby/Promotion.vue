@@ -1,10 +1,19 @@
 <template>
-  <section class="lobby-section" data-screen-label="Promotion">
+  <section class="lobby-section" :class="{ 'is-collapsed': collapsed }" data-screen-label="Promotion">
     <div class="section-head">
       <h2 class="section-title">Promotions<span class="count">{{ offers.length }}</span></h2>
+      <button
+        class="section-collapse"
+        :class="{ active: collapsed }"
+        :aria-label="collapsed ? 'Expand promotions' : 'Collapse promotions'"
+        :aria-expanded="!collapsed"
+        @click="collapsed = !collapsed"
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6" /></svg>
+      </button>
     </div>
 
-    <div class="promo-grid">
+    <div v-show="!collapsed" class="promo-grid">
       <article
         v-for="(o, i) in visibleOffers" :key="i"
         class="promo-card"
@@ -18,7 +27,7 @@
       </article>
     </div>
 
-    <div v-if="enableLoadMore && canLoadMore" class="cv-foot">
+    <div v-if="enableLoadMore && canLoadMore" v-show="!collapsed" class="cv-foot">
       <button class="cv-view-all" @click="loadMore">Load More</button>
     </div>
   </section>
@@ -32,6 +41,7 @@ const props = defineProps({
   pageSize:       { type: Number,  default: 2 },
 });
 
+const collapsed = ref(false);
 const visibleCount = ref(props.pageSize);
 
 const offers = [
