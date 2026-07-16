@@ -52,6 +52,23 @@
   color: var(--control-hover-text);
 }
 
+/* Quiet navigation controls share Back's normal and hover states. */
+.ui-button--quiet,
+.ap-back,
+.cv-view-all {
+  border-color: var(--control-border);
+  background: var(--control-bg);
+  color: var(--control-text);
+}
+
+.ui-button--quiet:hover:not(:disabled),
+.ap-back:hover,
+.cv-view-all:hover {
+  border-color: var(--control-hover-border);
+  background: var(--control-bg);
+  color: var(--control-hover-text);
+}
+
 .ui-button--primary,
 .ap-btn.primary,
 .ap-btn-wide.ap-grad,
@@ -115,8 +132,7 @@
   font-weight: var(--weight-bold);
 }
 
-.ui-table tbody tr,
-.rec-table tbody tr {
+.ui-table tbody td {
   background: var(--table-row-bg);
   border-bottom: 1px solid var(--table-row-border);
 }
