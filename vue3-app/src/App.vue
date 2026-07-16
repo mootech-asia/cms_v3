@@ -109,6 +109,7 @@
       <CategoryView v-else-if="catTab === 'Hot Games'"
         title="Hot Games" icon="fire"
         :games="[...GAMES.slots, ...GAMES.live, ...GAMES.originals]"
+        :show-filter-tabs="false"
         :show-provider-tabs="false"
         @open="openGame = $event"
       />
