@@ -1,5 +1,5 @@
 import { reactive, watch } from 'vue';
-import { DEFAULT_SKIN, normalizeSkin } from '../skins/index.js';
+import { DEFAULT_SKIN, SKINS, normalizeSkin } from '../skins/index.js';
 
 export const TWEAK_DEFAULTS = {
   theme:            'dark',
@@ -64,5 +64,5 @@ export function useTweaks(defaults = TWEAK_DEFAULTS) {
     { immediate: true }
   );
 
-  return { t, setTweak };
+  return { t, setTweak, skins: SKINS };
 }
