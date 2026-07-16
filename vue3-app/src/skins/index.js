@@ -10,7 +10,7 @@ export const SKINS = Object.freeze([
     id: 'white',
     label: 'Pearl Signature',
     theme: 'light',
-    swatch: '#2473ff',
+    swatch: '#343a42',
     surface: '#ffffff',
   }),
   Object.freeze({
