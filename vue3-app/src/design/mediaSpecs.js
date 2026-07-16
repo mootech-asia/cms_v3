@@ -22,6 +22,7 @@ export const MEDIA_UPLOAD_SPECS = Object.freeze({
   banner: Object.freeze({
     assetKey: 'hero',
     label: 'Hero banner',
+    actionLabel: 'Add banner',
     width: 2400,
     height: 720,
     ratio: '10:3',

@@ -73,6 +73,31 @@
           @change="replacePreviewAsset"
         />
 
+        <section v-if="selectedModuleId === 'banner'" class="studio-banner-library" aria-label="Banner set">
+          <header>
+            <div>
+              <span>Banner set</span>
+              <small>{{ bannerLibrary.length }} available</small>
+            </div>
+            <small>Select artwork to preview</small>
+          </header>
+          <div class="studio-banner-list">
+            <button
+              v-for="banner in bannerLibrary"
+              :key="banner.id"
+              type="button"
+              class="studio-banner-item"
+              :class="{ active: assets.hero === banner.image }"
+              @click="selectBanner(banner)"
+            >
+              <span class="studio-banner-thumb">
+                <img :src="banner.image" :alt="banner.label" :style="{ objectPosition: banner.position }" />
+              </span>
+              <strong>{{ banner.label }}</strong>
+            </button>
+          </div>
+        </section>
+
         <div class="studio-variant-grid" role="radiogroup" :aria-label="`${selectedModule.label} variants`">
           <button
             v-for="variant in variants"
@@ -138,7 +163,7 @@
                 </article>
 
                 <article v-else-if="selectedModuleId === 'banner'" class="hero studio-sample-banner">
-                  <img :src="assets.hero" alt="Premium vault campaign" />
+                  <img :src="assets.hero" alt="Premium vault campaign" :style="{ objectPosition: assets.heroPosition }" />
                   <div>
                     <span>PRIVATE ACCESS</span>
                     <h3>$250,000 Vault</h3>
@@ -275,6 +300,7 @@
 <script setup>
 import { computed, onBeforeUnmount, reactive, ref } from 'vue';
 import MediaUploadField from '@/components/design/MediaUploadField.vue';
+import { HERO_SLIDES } from '@/data/index.js';
 import { DEFAULT_DESIGN_MODULES } from '@/design/registry.js';
 import { MEDIA_UPLOAD_SPECS } from '@/design/mediaSpecs.js';
 import { useDesignStudio } from '@/composables/useDesignStudio.js';
@@ -300,9 +326,18 @@ const assets = reactive({
   game: `${import.meta.env.BASE_URL}assets/mock/game-04.webp`,
   promo: `${import.meta.env.BASE_URL}assets/mock/promo-4.webp`,
   hero: `${import.meta.env.BASE_URL}assets/mock/hero-1.webp`,
+  heroPosition: HERO_SLIDES[0].position || 'center',
+  heroMobilePosition: HERO_SLIDES[0].mobilePosition || HERO_SLIDES[0].position || 'center',
   avatar: '',
   logo: `${import.meta.env.BASE_URL}assets/logo.png`,
 });
+const bannerLibrary = ref(HERO_SLIDES.map((slide, index) => ({
+  id: `default-${index + 1}`,
+  label: slide.title.replace('\n', ' '),
+  image: slide.image,
+  position: slide.position || 'center',
+  mobilePosition: slide.mobilePosition || slide.position || 'center',
+})));
 const objectUrls = new Set();
 
 const moduleGroups = computed(() => {
@@ -333,9 +368,25 @@ function replaceDraft(value) {
   modules.forEach((module) => { draft[module.id] = normalized[module.id]; });
 }
 
-function replacePreviewAsset({ url }) {
+function replacePreviewAsset(payload) {
   const spec = selectedMediaSpec.value;
   if (!spec) return;
+  const { file, url } = payload;
+
+  if (spec.assetKey === 'hero') {
+    const banner = {
+      id: `upload-${Date.now()}`,
+      label: file.name.replace(/\.[^.]+$/, ''),
+      image: url,
+      position: 'center',
+      mobilePosition: 'center',
+    };
+    bannerLibrary.value.push(banner);
+    objectUrls.add(url);
+    selectBanner(banner);
+    return;
+  }
+
   const previous = assets[spec.assetKey];
   if (previous?.startsWith('blob:')) {
     URL.revokeObjectURL(previous);
@@ -343,6 +394,12 @@ function replacePreviewAsset({ url }) {
   }
   assets[spec.assetKey] = url;
   objectUrls.add(url);
+}
+
+function selectBanner(banner) {
+  assets.hero = banner.image;
+  assets.heroPosition = banner.position;
+  assets.heroMobilePosition = banner.mobilePosition;
 }
 
 function showNotice(message) {

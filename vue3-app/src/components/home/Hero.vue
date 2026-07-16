@@ -6,7 +6,14 @@
       class="hero-slide"
       :class="{ active: i === idx }"
     >
-      <div class="hero-bg" :style="{ '--hero-image': `url(${s.image})` }" />
+      <div
+        class="hero-bg"
+        :style="{
+          '--hero-image': `url(${s.image})`,
+          '--hero-position': s.position || 'center',
+          '--hero-mobile-position': s.mobilePosition || s.position || 'center',
+        }"
+      />
       <div class="hero-content">
         <div>
           <h1 class="hero-title">{{ s.title }}</h1>

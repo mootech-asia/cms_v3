@@ -184,6 +184,88 @@
   line-height: var(--line-body);
 }
 
+.studio-banner-library {
+  display: grid;
+  gap: 12px;
+  margin: 0 0 18px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  background: var(--bg-card);
+}
+
+.studio-banner-library > header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.studio-banner-library > header > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.studio-banner-library header span {
+  color: var(--text);
+  font-size: var(--type-body-sm);
+  font-weight: var(--weight-bold);
+}
+
+.studio-banner-library header small {
+  color: var(--text-dim);
+  font-size: var(--type-caption);
+}
+
+.studio-banner-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.studio-banner-item {
+  display: grid;
+  min-width: 0;
+  gap: 8px;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--bg-elev);
+  color: var(--text-mid);
+  text-align: left;
+  cursor: pointer;
+}
+
+.studio-banner-item:hover,
+.studio-banner-item.active {
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+.studio-banner-thumb {
+  display: grid;
+  width: 100%;
+  aspect-ratio: 10 / 3;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-xs);
+  background: var(--preview-neutral-900);
+}
+
+.studio-banner-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.studio-banner-item strong {
+  overflow: hidden;
+  font-size: var(--type-meta);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .studio-notice {
   margin: -8px 0 16px;
   padding: 10px 12px;
@@ -626,6 +708,7 @@
   .studio-media-upload-head { align-items: stretch; flex-direction: column; }
   .studio-media-button { justify-content: center; width: 100%; }
   .studio-media-spec-grid { grid-template-columns: 1fr; }
+  .studio-banner-list { grid-template-columns: 1fr; }
   .studio-media-spec-grid > span,
   .studio-media-spec-grid > span:nth-child(2) { border-right: 0; border-bottom: 1px solid var(--line); }
   .studio-media-spec-grid > span:last-child { border-bottom: 0; }
