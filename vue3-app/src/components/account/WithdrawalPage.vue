@@ -8,12 +8,12 @@
     </button>
     <h1 class="ap-h1">Withdrawal</h1>
 
-    <div class="wd-primary-tabs" role="tablist" aria-label="Withdrawal sections">
+    <div class="ui-tablist--underline" role="tablist" aria-label="Withdrawal sections">
       <button
         v-for="tab in primaryTabs"
         :key="tab.id"
         type="button"
-        class="wd-primary-tab"
+        class="ui-tab--underline"
         :class="{ active: primaryTab === tab.id }"
         role="tab"
         :aria-selected="primaryTab === tab.id"
