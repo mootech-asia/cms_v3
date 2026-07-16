@@ -1,15 +1,7 @@
 /* ── Root Layout ─────────────────────────────────────────────── */
 /* 所有 layout 相關的 CSS：shell、sidebar 尺寸、header、container */
 
-:root {
-  --sidebar-w:        248px;
-  --sidebar-w-collapsed: 64px;
-  --header-h:         64px;
-  --container:        1440px;
-  --container-pad:    28px;
-  --mobile-nav-h:     64px;
-  --layout-transition: 0.25s ease;
-}
+/* Shared layout dimensions live in assets/design-system/tokens.css. */
 
 /* ── Shell（最外層彈性盒）────────────────────────────────────── */
 .shell {
