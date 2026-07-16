@@ -508,8 +508,8 @@ img { display: block; }
 
 /* ── PROMO RIBBON ──────────────────────── */
 .promo-ribbon {
-  display: flex; align-items: center; gap: 22px;
-  padding: 11px 18px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
   margin: 14px 0 0;
   width: 100%;
   border: 1px solid var(--line);
@@ -519,8 +519,17 @@ img { display: block; }
   font-size: 13px;
   white-space: nowrap;
 }
+.promo-ribbon-viewport {
+  min-width: 0;
+  overflow: hidden;
+  padding: 11px 22px;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 20px, #000 calc(100% - 20px), transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 20px, #000 calc(100% - 20px), transparent);
+}
 .promo-ribbon .track {
-  display: flex; gap: 36px;
+  display: flex;
+  width: max-content;
+  gap: 36px;
   animation: ribbon 38s linear infinite;
 }
 .promo-ribbon .item {
@@ -531,6 +540,21 @@ img { display: block; }
 .promo-ribbon .item .dot {
   color: var(--accent-2);
   font-size: 14px;
+}
+.promo-ribbon-time {
+  align-self: stretch;
+  min-width: 112px;
+  padding: 0 16px;
+  border-left: 1px solid var(--line);
+  background: var(--bg-elev);
+  color: var(--text);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
 }
 @keyframes ribbon {
   from { transform: translateX(0); }
@@ -751,10 +775,7 @@ img { display: block; }
 .hero-slide.active { opacity: 1; pointer-events: auto; }
 .hero-bg {
   position: absolute; inset: 0;
-  background:
-    radial-gradient(ellipse at 30% 50%, color-mix(in oklch, var(--hero-hue) 50%, transparent) 0%, transparent 60%),
-    radial-gradient(ellipse at 70% 30%, color-mix(in oklch, var(--hero-hue-2) 40%, transparent) 0%, transparent 50%),
-    linear-gradient(135deg, #0a0a16, #14122a 60%, #1a0c20);
+  background: var(--preview-hero-bg);
   z-index: -1;
 }
 .hero-bg::after {
@@ -814,14 +835,12 @@ img { display: block; }
   right: 60px; top: 50%; transform: translateY(-50%);
   width: 280px; height: 280px;
   border-radius: 24px;
-  background:
-    radial-gradient(circle at 50% 50%, color-mix(in oklch, var(--hero-hue) 60%, transparent) 0%, transparent 70%),
-    repeating-linear-gradient(45deg, rgba(255,255,255,.08) 0 2px, transparent 2px 12px);
-  border: 1px solid var(--line);
+  background: var(--preview-art-bg);
+  border: 1px solid var(--preview-neutral-line);
   display: grid; place-items: center;
   font-family: var(--font-mono);
   font-size: 11px;
-  color: var(--text-dim);
+  color: var(--preview-neutral-text);
 }
 .hero-controls {
   position: absolute;
@@ -1541,11 +1560,7 @@ section.lobby-section { margin-top: 44px; }
 .gcard-art {
   position: relative;
   aspect-ratio: var(--card-aspect);
-  background:
-    linear-gradient(135deg,
-      color-mix(in oklch, var(--accent) 42%, #0a0e16) 0%,
-      color-mix(in oklch, var(--accent) 18%, #0a0e16) 55%,
-      #0a0e16 100%);
+  background: var(--preview-game-bg);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -1988,13 +2003,13 @@ section.lobby-section { margin-top: 44px; }
   aspect-ratio: 1 / 1;
   height: auto;
   margin: 0 auto 20px;
-  background: var(--gm-bg);
+  background: var(--preview-game-bg);
   border-radius: var(--radius-lg);
   position: relative; overflow: hidden;
   display: grid; place-items: center;
   font-family: var(--font-mono);
   font-size: 11px;
-  color: rgba(255,255,255,.55);
+  color: var(--preview-neutral-text);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   text-align: center;
@@ -2435,9 +2450,15 @@ select.twk-field {
 .ap-hero-bg {
   position: absolute; inset: 0;
   background:
-    radial-gradient(ellipse 90% 80% at 100% 50%, color-mix(in oklch, var(--accent) 22%, transparent) 0%, transparent 60%),
-    repeating-linear-gradient(135deg, rgba(255,255,255,.025) 0 1px, transparent 1px 14px);
+    repeating-linear-gradient(135deg, rgba(255,255,255,.025) 0 1px, transparent 1px 14px),
+    linear-gradient(105deg, transparent 22%, color-mix(in oklch, var(--accent) 8%, transparent) 48%, transparent 72%);
+  background-size: auto, 220% 100%;
+  animation: account-hero-sheen var(--account-sheen-duration) cubic-bezier(.4, 0, .2, 1) infinite;
   z-index: -1;
+}
+@keyframes account-hero-sheen {
+  from { background-position: 0 0, 130% 0; }
+  to { background-position: 0 0, -130% 0; }
 }
 .ap-hero-avatar {
   width: 76px; height: 76px;
@@ -2631,13 +2652,13 @@ select.twk-field {
   cursor: pointer;
   transition: border-color .15s, color .15s, background .15s;
 }
-.ap-amount-btn:hover:not(.active) { border-color: var(--accent); color: #fff; }
+.ap-amount-btn:hover:not(.active) { border-color: var(--accent); color: var(--text); }
 .ap-amount-btn.active {
   background: var(--gradient-primary);
-  color: #fff;
+  color: var(--text-on-accent);
   border-color: transparent;
   font-weight: 700;
-  box-shadow: 0 0 12px color-mix(in oklch, var(--primary) 45%, transparent);
+  box-shadow: var(--shadow-primary-sm);
 }
 .ap-input {
   display: block;
@@ -4132,7 +4153,7 @@ select.twk-field {
 [data-theme="light"] .promo-card { box-shadow: 0 1px 0 rgba(15,15,23,.04), 0 4px 14px rgba(15,15,23,.06) !important; }
 [data-theme="light"] .tourn::before,
 [data-theme="light"] .promo-card::before,
-[data-theme="light"] .ap-hero-bg { display: none !important; }
+[data-theme="light"] .ap-hero-bg { opacity: .55; }
 
 
 /* ════ LIGHT THEME — flatten muddy grey gradients on pill/tab controls ════ */
@@ -4332,43 +4353,7 @@ select.twk-field {
 
 
 /* ── Withdrawal — tabbed withdraw and account management ── */
-.wd-primary-tabs {
-  display: flex;
-  align-items: flex-end;
-  gap: 30px;
-  margin-bottom: 20px;
-  border-bottom: 1px solid var(--line-hi);
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-.wd-primary-tabs::-webkit-scrollbar,
 .wd-method-tabs::-webkit-scrollbar { display: none; }
-.wd-primary-tab {
-  position: relative;
-  flex: 0 0 auto;
-  min-height: 48px;
-  padding: 10px 0 14px;
-  border: 0;
-  background: transparent;
-  color: var(--text-mid);
-  font: inherit;
-  font-size: var(--type-body);
-  font-weight: var(--weight-bold);
-  white-space: nowrap;
-  cursor: pointer;
-}
-.wd-primary-tab:hover { color: var(--text); }
-.wd-primary-tab.active { color: var(--accent-2); }
-.wd-primary-tab.active::after {
-  content: '';
-  position: absolute;
-  right: 0;
-  bottom: -1px;
-  left: 0;
-  height: 3px;
-  border-radius: 3px 3px 0 0;
-  background: var(--gradient-primary-short);
-}
 .wd-method-tabs {
   display: flex;
   gap: 10px;
@@ -4570,52 +4555,6 @@ select.twk-field {
 
 
 /* ── Deposit — gateway and payment method tabs ── */
-.dp-provider-tabs {
-  display: flex;
-  align-items: flex-end;
-  gap: 0;
-  margin-bottom: 18px;
-  border-bottom: 1px solid var(--line-hi);
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-.dp-provider-tabs::-webkit-scrollbar { display: none; }
-.dp-provider-tabs button {
-  position: relative;
-  flex: 1 0 210px;
-  min-width: 0;
-  min-height: 48px;
-  padding: 10px 14px 13px;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  color: var(--text-mid);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  font: inherit;
-  font-size: 12.5px;
-  font-weight: var(--weight-semibold);
-  cursor: pointer;
-  white-space: nowrap;
-  transition: color var(--duration-fast), background var(--duration-fast);
-}
-.dp-provider-tabs button:hover:not(.active) { color: var(--text); background: color-mix(in oklch, var(--accent) 5%, transparent); }
-.dp-provider-tabs button.active {
-  color: var(--accent);
-  background: color-mix(in oklch, var(--accent) 8%, transparent);
-}
-.dp-provider-tabs button.active::after {
-  content: '';
-  position: absolute;
-  right: 10px;
-  bottom: -1px;
-  left: 10px;
-  height: 3px;
-  border-radius: 3px 3px 0 0;
-  background: var(--gradient-primary-short);
-}
 .dp-provider-code {
   display: grid;
   place-items: center;
@@ -4657,8 +4596,8 @@ select.twk-field {
 .dp-method-tabs button.active {
   border-color: transparent;
   background: var(--gradient-primary);
-  color: #fff;
-  box-shadow: 0 0 16px color-mix(in oklch, var(--primary) 40%, transparent);
+  color: var(--text-on-accent);
+  box-shadow: var(--shadow-primary-sm);
 }
 
 /* Crypto Wallet form */
@@ -4684,7 +4623,6 @@ select.twk-field {
 .deposit-result { max-width: 520px; }
 .deposit-result .pi-success-sub { line-height: 1.7; margin: 10px auto 22px; max-width: 440px; }
 @media (max-width: 700px) {
-  .wd-primary-tabs { gap: 24px; }
   .wd-method-tabs button { min-width: 170px; }
   .wd-panel { padding: 20px 18px; }
   .wd-form-grid { grid-template-columns: 1fr; gap: 7px; }
@@ -4693,7 +4631,6 @@ select.twk-field {
   .wd-bank-logo { flex-basis: 54px; width: 54px; height: 50px; }
   .wd-balance-row { grid-template-columns: 1fr auto; }
   .wd-empty-wallet { min-height: 220px; padding: 24px 18px; }
-  .dp-provider-tabs button { flex: 0 0 230px; justify-content: flex-start; }
   .dp-method-tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .dp-crypto-grid { grid-template-columns: 1fr; gap: 8px; }
   .dp-crypto-promo { flex-wrap: wrap; }
@@ -5138,4 +5075,22 @@ select.twk-field {
   .lobby-sort-item .section-title-group { padding-left: 44px; }
   .lobby-drag-handle { width: 36px; height: 36px; }
   .gcard-fav { width: 30px; height: 30px; }
+}
+
+@media (max-width: 700px) {
+  .promo-ribbon-viewport { padding-inline: 14px; }
+  .promo-ribbon-time {
+    min-width: 88px;
+    padding-inline: 10px;
+    gap: 6px;
+    font-size: 11px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .promo-ribbon .track { animation-play-state: paused; }
+  .ap-hero-bg {
+    animation: none;
+    background-position: 0 0, 50% 0;
+  }
 }
