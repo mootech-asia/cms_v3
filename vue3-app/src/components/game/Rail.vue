@@ -1,26 +1,12 @@
 <template>
   <section class="lobby-section" :class="{ 'is-collapsed': collapsed }" :data-screen-label="title">
     <div class="section-head">
-      <h2 class="section-title">
-        <Icon v-if="icon" :name="icon" :size="18" />
-        {{ title }}
-        <span class="count">{{ count ?? games.length }}</span>
-      </h2>
-      <div class="section-actions">
-        <template v-if="showActions">
-          <a
-            v-if="seeAllTab"
-            href="#"
-            class="see-all"
-            @click.prevent="emit('see-all', seeAllTab)"
-          >See all →</a>
-          <button class="arrow" :disabled="!canL" aria-label="Scroll left" @click="scroll(-1)">
-            <Icon name="arrL" />
-          </button>
-          <button class="arrow" :disabled="!canR" aria-label="Scroll right" @click="scroll(1)">
-            <Icon name="arrR" />
-          </button>
-        </template>
+      <div class="section-title-group">
+        <h2 class="section-title">
+          <Icon v-if="icon" :name="icon" :size="18" />
+          {{ title }}
+          <span class="count">{{ count ?? games.length }}</span>
+        </h2>
         <button
           class="section-collapse"
           :class="{ active: collapsed }"
@@ -29,6 +15,20 @@
           @click="collapsed = !collapsed"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6" /></svg>
+        </button>
+      </div>
+      <div v-if="showActions" class="section-actions">
+        <a
+          v-if="seeAllTab"
+          href="#"
+          class="see-all"
+          @click.prevent="emit('see-all', seeAllTab)"
+        >See all →</a>
+        <button class="arrow" :disabled="!canL" aria-label="Scroll left" @click="scroll(-1)">
+          <Icon name="arrL" />
+        </button>
+        <button class="arrow" :disabled="!canR" aria-label="Scroll right" @click="scroll(1)">
+          <Icon name="arrR" />
         </button>
       </div>
     </div>
