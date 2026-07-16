@@ -12,16 +12,27 @@
     <!-- 分組導覽 -->
     <nav class="sidebar-list">
       <section v-for="section in sections" :key="section.label" class="sb-section">
-        <div class="sb-section-title">{{ section.label }}</div>
-        <a
-          v-for="item in section.items" :key="item.name"
-          href="#"
-          class="sb-item"
-          :class="{ active: isActive(item) }"
-          :title="collapsed ? item.name : undefined"
-          @click.prevent="handleNav(item)"
+        <button
+          class="sb-section-toggle"
+          :class="{ collapsed: !sectionOpen[section.label] }"
+          :aria-expanded="sectionOpen[section.label]"
+          @click="sectionOpen[section.label] = !sectionOpen[section.label]"
         >
-          <span class="sb-icon">
+          <span>{{ section.label }}</span>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="m6 9 6 6 6-6" />
+          </svg>
+        </button>
+        <div v-show="sectionOpen[section.label]" class="sb-section-items">
+          <a
+            v-for="item in section.items" :key="item.name"
+            href="#"
+            class="sb-item"
+            :class="{ active: isActive(item) }"
+            :title="collapsed ? item.name : undefined"
+            @click.prevent="handleNav(item)"
+          >
+            <span class="sb-icon">
             <svg width="18" height="18" viewBox="0 0 24 24">
               <path v-if="item.icon === 'home'" d="M4 11 12 4l8 7v8a1 1 0 0 1-1 1h-4v-6h-6v6H5a1 1 0 0 1-1-1v-8Z" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linejoin="round" />
               <path v-else-if="item.icon === 'fire'" d="M13.5 3.5c.8 3.1-.4 4.8-1.8 6.2.1-2.1-1.1-3.4-2.1-4.2.2 3.2-3.6 4.8-3.6 9A6 6 0 0 0 18 14c0-3-1.7-5.8-4.5-10.5Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" />
@@ -73,8 +84,9 @@
               </g>
             </svg>
           </span>
-          <span class="sb-label">{{ item.name }}</span>
-        </a>
+            <span class="sb-label">{{ item.name }}</span>
+          </a>
+        </div>
       </section>
     </nav>
 
@@ -159,7 +171,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
+import { reactive, ref, onMounted, onUnmounted } from 'vue';
 import Icon from '@/components/ui/Icon.vue';
 
 const props = defineProps({
@@ -176,6 +188,11 @@ const emit = defineEmits([
   'sign-in',
   'close-menu',
 ]);
+
+const sectionOpen = reactive({
+  Menu: true,
+  'My Account': true,
+});
 
 const lang     = ref('en');
 const langOpen = ref(false);
