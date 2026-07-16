@@ -18,6 +18,7 @@
   --text-mid: rgba(234, 245, 255, 0.7);
   --text-dim: rgba(234, 245, 255, 0.42);
   --text-on-accent: #ffffff;
+  --text-on-accent-soft: #eafff6;
   --icon-muted: rgba(234, 245, 255, 0.72);
   --cal-icon: var(--icon-muted);
   --calendar-indicator-filter: invert(88%) brightness(1.05);
@@ -41,6 +42,13 @@
   --danger: var(--negative);
   --pos: var(--positive);
   --neg: var(--negative);
+  --status-success-bg: color-mix(in oklch, #1f8a5b 16%, var(--bg-elev));
+  --status-success-text: #2fd396;
+  --status-success-border: color-mix(in oklch, #1f8a5b 45%, transparent);
+  --badge-highlight-bg: color-mix(in oklch, var(--accent) 32%, var(--bg-elev));
+  --badge-highlight-text: var(--text-on-accent-soft);
+  --badge-highlight-border: var(--accent);
+  --badge-highlight-shadow: 0 0 6px color-mix(in oklch, var(--accent) 50%, transparent);
 
   /* Reusable fills */
   --gradient-primary: linear-gradient(
@@ -53,6 +61,13 @@
     180deg,
     var(--primary-start) 0%,
     var(--primary) 100%
+  );
+  --rollover-title-gradient: linear-gradient(
+    90deg,
+    #22d3ee 0%,
+    var(--primary) 35%,
+    #a855f7 65%,
+    #facc15 100%
   );
   --accent-grad: linear-gradient(
     135deg,
@@ -132,6 +147,9 @@
   --calendar-indicator-filter: invert(28%) brightness(0.85);
   --calendar-indicator-hover-filter: invert(34%) sepia(70%) saturate(900%) hue-rotate(188deg) brightness(0.9);
   --calendar-indicator-opacity: 0.72;
+  --status-success-bg: #e7f7ef;
+  --status-success-text: #1f8a5b;
+  --status-success-border: #bfe6d2;
 
   --control-bg: linear-gradient(180deg, #ffffff 0%, #f7f6f1 100%);
   --control-text: var(--text-mid);
