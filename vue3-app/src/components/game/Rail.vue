@@ -6,8 +6,13 @@
         {{ title }}
         <span class="count">{{ count ?? games.length }}</span>
       </h2>
-      <div class="section-actions">
-        <a href="#" class="see-all">See all →</a>
+      <div v-if="showActions" class="section-actions">
+        <a
+          v-if="seeAllTab"
+          href="#"
+          class="see-all"
+          @click.prevent="emit('see-all', seeAllTab)"
+        >See all →</a>
         <button class="arrow" :disabled="!canL" aria-label="Scroll left" @click="scroll(-1)">
           <Icon name="arrL" />
         </button>
@@ -35,12 +40,14 @@ import Icon     from '@/components/ui/Icon.vue';
 import GameCard from '@/components/game/GameCard.vue';
 
 const props = defineProps({
-  title:  { type: String,  required: true },
-  games:  { type: Array,   default: () => [] },
-  count:  { type: Number,  default: null },
-  icon:   { type: String,  default: null },
+  title:       { type: String,  required: true },
+  games:       { type: Array,   default: () => [] },
+  count:       { type: Number,  default: null },
+  icon:        { type: String,  default: null },
+  showActions: { type: Boolean, default: true },
+  seeAllTab:   { type: String,  default: null },
 });
-const emit = defineEmits(['open']);
+const emit = defineEmits(['open', 'see-all']);
 
 const railEl = ref(null);
 const canL   = ref(false);
