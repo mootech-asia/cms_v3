@@ -21,8 +21,9 @@
             @click="skinMenuOpen = !skinMenuOpen; menuOpen = false"
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M12 8a4 4 0 1 0 4 4 2.8 2.8 0 0 1-4-4Z" />
-              <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+              <path d="m12 3 8 5-8 5-8-5 8-5Z" />
+              <path d="m5.5 12 6.5 4 6.5-4" />
+              <path d="m7.5 17 4.5 2.8 4.5-2.8" />
             </svg>
           </button>
 
