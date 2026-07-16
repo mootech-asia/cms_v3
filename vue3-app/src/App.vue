@@ -82,33 +82,70 @@
 
       <!-- Lobby tab -->
       <template v-if="catTab === 'Lobby'">
-        <Rail
-          title="Recently played"
-          :games="RECENTLY_PLAYED"
-          :count="RECENTLY_PLAYED.length"
-          :show-actions="false"
-          @open="openGame = $event"
-        />
-        <Rail
-          title="Slots"
-          icon="fire"
-          :games="GAMES.slots"
-          see-all-tab="Slots"
-          @see-all="catTab = $event"
-          @open="openGame = $event"
-        />
-        <Rail
-          title="Live Casino"
-          icon="bolt"
-          :games="GAMES.live"
-          see-all-tab="Live"
-          @see-all="catTab = $event"
-          @open="openGame = $event"
-        />
-        <Leaderboard />
-        <Tournaments />
-        <Promotion />
-        <Providers />
+        <div class="lobby-section-list" :class="{ 'is-reordering': draggedSectionId }">
+          <div
+            v-for="sectionId in lobbySectionOrder"
+            :key="sectionId"
+            class="lobby-sort-item"
+            :class="{
+              'is-dragging': draggedSectionId === sectionId,
+              'is-drag-over': dragOverSectionId === sectionId && draggedSectionId !== sectionId,
+            }"
+            :data-sort-id="sectionId"
+          >
+            <button
+              class="lobby-drag-handle"
+              type="button"
+              :aria-label="`Reorder ${lobbySectionLabels[sectionId]}`"
+              :title="`Drag to reorder ${lobbySectionLabels[sectionId]}`"
+              @pointerdown="startSectionPointerDrag(sectionId, $event)"
+              @pointermove="moveSectionPointerDrag"
+              @pointerup="finishSectionPointerDrag"
+              @pointercancel="finishSectionPointerDrag"
+              @keydown.up.prevent="moveSectionBy(sectionId, -1)"
+              @keydown.down.prevent="moveSectionBy(sectionId, 1)"
+              @keydown.home.prevent="moveSectionBy(sectionId, -lobbySectionOrder.length)"
+              @keydown.end.prevent="moveSectionBy(sectionId, lobbySectionOrder.length)"
+            >
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+                <circle cx="5" cy="3" r="1.25" /><circle cx="11" cy="3" r="1.25" />
+                <circle cx="5" cy="8" r="1.25" /><circle cx="11" cy="8" r="1.25" />
+                <circle cx="5" cy="13" r="1.25" /><circle cx="11" cy="13" r="1.25" />
+              </svg>
+            </button>
+
+            <Rail
+              v-if="sectionId === 'recently-played'"
+              title="Recently played"
+              :games="RECENTLY_PLAYED"
+              :count="RECENTLY_PLAYED.length"
+              :show-actions="false"
+              @open="openGame = $event"
+            />
+            <Rail
+              v-else-if="sectionId === 'slots'"
+              title="Slots"
+              icon="fire"
+              :games="GAMES.slots"
+              see-all-tab="Slots"
+              @see-all="catTab = $event"
+              @open="openGame = $event"
+            />
+            <Rail
+              v-else-if="sectionId === 'live-casino'"
+              title="Live Casino"
+              icon="bolt"
+              :games="GAMES.live"
+              see-all-tab="Live"
+              @see-all="catTab = $event"
+              @open="openGame = $event"
+            />
+            <Leaderboard v-else-if="sectionId === 'top-wins'" />
+            <Tournaments v-else-if="sectionId === 'live-sport'" />
+            <Promotion v-else-if="sectionId === 'promotions'" />
+            <Providers v-else-if="sectionId === 'providers'" />
+          </div>
+        </div>
       </template>
 
       <!-- Hot Games tab -->
@@ -252,12 +289,114 @@ const balance           = ref(1284.32);
 const user              = ref(null);
 const nickname          = ref('Meow');
 
+const LOBBY_SECTION_STORAGE_KEY = 'cms-v3:lobby-section-order';
+const DEFAULT_LOBBY_SECTION_ORDER = Object.freeze([
+  'recently-played',
+  'slots',
+  'live-casino',
+  'top-wins',
+  'live-sport',
+  'promotions',
+  'providers',
+]);
+const lobbySectionLabels = Object.freeze({
+  'recently-played': 'Recently played',
+  slots: 'Slots',
+  'live-casino': 'Live Casino',
+  'top-wins': 'Top wins',
+  'live-sport': 'Live sport',
+  promotions: 'Promotions',
+  providers: 'Providers',
+});
+const lobbySectionOrder = ref([...DEFAULT_LOBBY_SECTION_ORDER]);
+const draggedSectionId = ref(null);
+const dragOverSectionId = ref(null);
+const touchDragPointerId = ref(null);
+
 // showPromos 從 tweaks 驅動
 const showPromos = computed(() => t.showPromos);
 const isSupportView = computed(() => ['About Us', 'FAQ'].includes(catTab.value));
 
+function saveLobbySectionOrder() {
+  try {
+    localStorage.setItem(LOBBY_SECTION_STORAGE_KEY, JSON.stringify(lobbySectionOrder.value));
+  } catch {
+    // Storage can be unavailable in private browsing; ordering still works for this session.
+  }
+}
+
+function restoreLobbySectionOrder() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(LOBBY_SECTION_STORAGE_KEY));
+    if (!Array.isArray(saved)) return;
+    const known = saved.filter((id) => DEFAULT_LOBBY_SECTION_ORDER.includes(id));
+    const missing = DEFAULT_LOBBY_SECTION_ORDER.filter((id) => !known.includes(id));
+    lobbySectionOrder.value = [...new Set([...known, ...missing])];
+  } catch {
+    lobbySectionOrder.value = [...DEFAULT_LOBBY_SECTION_ORDER];
+  }
+}
+
+function reorderSection(sourceId, targetId) {
+  if (!sourceId || !targetId || sourceId === targetId) return;
+  const next = [...lobbySectionOrder.value];
+  const sourceIndex = next.indexOf(sourceId);
+  const targetIndex = next.indexOf(targetId);
+  if (sourceIndex < 0 || targetIndex < 0) return;
+  next.splice(sourceIndex, 1);
+  next.splice(targetIndex, 0, sourceId);
+  lobbySectionOrder.value = next;
+  dragOverSectionId.value = targetId;
+}
+
+function moveSectionTo(targetId) {
+  reorderSection(draggedSectionId.value, targetId);
+}
+
+function finishSectionDrag() {
+  if (draggedSectionId.value) saveLobbySectionOrder();
+  draggedSectionId.value = null;
+  dragOverSectionId.value = null;
+  touchDragPointerId.value = null;
+}
+
+function startSectionPointerDrag(sectionId, event) {
+  draggedSectionId.value = sectionId;
+  touchDragPointerId.value = event.pointerId;
+  event.currentTarget.setPointerCapture(event.pointerId);
+}
+
+function moveSectionPointerDrag(event) {
+  if (touchDragPointerId.value !== event.pointerId || !draggedSectionId.value) return;
+  const edge = 72;
+  if (event.clientY < edge) window.scrollBy({ top: -18, behavior: 'auto' });
+  if (event.clientY > window.innerHeight - edge) window.scrollBy({ top: 18, behavior: 'auto' });
+  const target = document.elementFromPoint(event.clientX, event.clientY)?.closest('[data-sort-id]');
+  if (target?.dataset.sortId) moveSectionTo(target.dataset.sortId);
+}
+
+function finishSectionPointerDrag(event) {
+  if (touchDragPointerId.value !== null && touchDragPointerId.value !== event.pointerId) return;
+  finishSectionDrag();
+}
+
+function moveSectionBy(sectionId, delta) {
+  const currentIndex = lobbySectionOrder.value.indexOf(sectionId);
+  if (currentIndex < 0) return;
+  const targetIndex = Math.max(0, Math.min(lobbySectionOrder.value.length - 1, currentIndex + delta));
+  if (currentIndex === targetIndex) return;
+  const next = [...lobbySectionOrder.value];
+  next.splice(currentIndex, 1);
+  next.splice(targetIndex, 0, sectionId);
+  lobbySectionOrder.value = next;
+  saveLobbySectionOrder();
+}
+
 // 模擬餘額浮動
 let balanceTimer;
-onMounted(()    => { balanceTimer = setInterval(() => { balance.value = +(balance.value + (Math.random() * 4 - 1.7)).toFixed(2); }, 5500); });
+onMounted(() => {
+  restoreLobbySectionOrder();
+  balanceTimer = setInterval(() => { balance.value = +(balance.value + (Math.random() * 4 - 1.7)).toFixed(2); }, 5500);
+});
 onUnmounted(()  => clearInterval(balanceTimer));
 </script>
