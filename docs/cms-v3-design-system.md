@@ -520,13 +520,23 @@ document.documentElement.setAttribute('data-skin', 'blue')
 document.documentElement.setAttribute('data-theme', 'dark')
 ```
 
+程式內切換：
+
+```js
+const { setTweak, skins } = useTweaks()
+
+setTweak('skin', 'blue')
+```
+
+`useTweaks` 會驗證 skin 名稱、寫入 `data-skin`，並使用 `cms_skin` 保存選擇；無效名稱會回到 `blue`。
+
 新增 skin：
 
 1. 複製 `src/assets/skins/blue.css`。
-2. 改為新的 `data-skin` 名稱。
-3. 只修改 skin tokens。
-4. 在 `src/skins/index.js` 註冊。
-5. 不修改元件 CSS。
+2. 將 selector 改為新的 `data-skin` 名稱。
+3. 只修改 skin tokens，不放尺寸、grid 或內容規則。
+4. 在 `src/skins/index.js` 匯入 CSS 並註冊 `id / label`。
+5. 不修改頁面元件 CSS。
 6. 檢查 dark / light、hover、active、disabled、focus。
 
 ## 10. 檔案責任
@@ -557,7 +567,23 @@ src/composables/useTweaks.js
   theme、skin、density、aspect 與 localStorage
 ```
 
-## 11. 本次稽核發現
+## 11. 已落地的整理
+
+目前分支已完成：
+
+- 建立重構前備份分支 `backup/pre-design-system-20260716`。
+- 將字體、字級、間距、圓角、控制尺寸與 layout 尺寸集中至 `tokens.css`。
+- 將藍色、surface、狀態色、漸層、陰影、表頭與互動狀態集中至 `blue.css`。
+- 將 title、button、quiet control、tab、table 舊 class 對應到共用 UI contract。
+- 移除 `main.css` / `layout.css` 重複的根變數與 shell / container 定義。
+- 合併 Sidebar tab、Account primary、wide button、Rewards Banner 等重複基礎規則。
+- Primary 漸層、record table header、record total、Back / Load More 已改讀 skin token。
+- `useTweaks` 已由單一 accent 色改為完整 skin，並保留 dark / light theme。
+- 保留 Rewards 兩欄進度對齊、藍色表頭、record total 置底與 compact Load More 尺寸。
+
+響應式 override、light theme 特例與頁面專屬 layout 仍可保留重複 selector；它們屬於明確 context，不應為追求零重複而合併。
+
+## 12. 本次稽核發現
 
 盤點時：
 
