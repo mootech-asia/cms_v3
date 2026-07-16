@@ -2429,13 +2429,14 @@ select.twk-field {
   color: #fff;
 }
 .ap-tag-new {
-  font-size: 11px;
-  font-weight: 700;
   padding: 3px 10px;
-  border-radius: 999px;
-  background: color-mix(in oklch, var(--accent) 30%, var(--bg-card-hi));
-  color: var(--accent-2);
-  border: 1px solid var(--accent);
+  border-radius: var(--radius-pill);
+  background: var(--badge-highlight-bg) !important;
+  color: var(--badge-highlight-text) !important;
+  border: 1px solid var(--badge-highlight-border) !important;
+  font-size: 11px;
+  font-weight: var(--weight-bold);
+  text-shadow: var(--badge-highlight-shadow);
 }
 .ap-hero-nick {
   display: flex; align-items: center; gap: 4px;
@@ -2543,12 +2544,13 @@ select.twk-field {
 .ap-status {
   display: inline-block;
   padding: 4px 12px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
+  background: var(--status-success-bg) !important;
+  color: var(--status-success-text) !important;
+  border: 1px solid var(--status-success-border) !important;
   font-size: 12px;
-  font-weight: 600;
-  background: color-mix(in oklch, var(--accent) 22%, var(--bg-card));
-  color: var(--accent-2);
-  border: 1px solid color-mix(in oklch, var(--accent) 30%, var(--line));
+  font-weight: var(--weight-semibold) !important;
+  text-shadow: none !important;
 }
 
 /* Deposit / Withdrawal form */
@@ -2814,11 +2816,15 @@ select.twk-field {
 .ap-bank-saved-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
 .ap-bank-saved-bank { font-family: var(--font-display); font-weight: 700; font-size: 16px; color: #fff; }
 .ap-bank-saved-default {
-  font-size: 10.5px; font-weight: 700; letter-spacing: 0.04em;
-  padding: 3px 10px; border-radius: 999px;
-  background: color-mix(in oklch, var(--accent) 28%, var(--bg-card));
-  color: var(--accent-2);
-  border: 1px solid var(--accent);
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  background: var(--badge-highlight-bg) !important;
+  color: var(--badge-highlight-text) !important;
+  border: 1px solid var(--badge-highlight-border) !important;
+  font-size: var(--type-caption);
+  font-weight: var(--weight-bold) !important;
+  letter-spacing: 0;
+  text-shadow: var(--badge-highlight-shadow);
 }
 .ap-bank-saved-num {
   font-family: var(--font-mono);
@@ -2854,29 +2860,9 @@ select.twk-field {
 
 
 /* contrast fixes — status badge + new tag */
-.ap-status {
-  background: color-mix(in oklch, var(--accent) 30%, var(--bg-elev)) !important;
-  color: #eafff6 !important;
-  border-color: var(--accent) !important;
-  text-shadow: 0 0 6px color-mix(in oklch, var(--accent) 50%, transparent);
-  font-weight: 700 !important;
-}
-.ap-tag-new {
-  background: color-mix(in oklch, var(--accent) 32%, var(--bg-elev)) !important;
-  color: #eafff6 !important;
-  border-color: var(--accent) !important;
-  text-shadow: 0 0 6px color-mix(in oklch, var(--accent) 50%, transparent);
-}
 
 
 /* fix Default badge contrast */
-.ap-bank-saved-default {
-  background: color-mix(in oklch, var(--accent) 32%, var(--bg-elev)) !important;
-  color: #eafff6 !important;
-  border-color: var(--accent) !important;
-  text-shadow: 0 0 6px color-mix(in oklch, var(--accent) 50%, transparent);
-  font-weight: 700 !important;
-}
 
 /* ── SUPPORT / ABOUT US PAGE ────────────── */
 .sup-page { margin-top: 24px; }
@@ -3084,26 +3070,23 @@ select.twk-field {
   margin-bottom: 16px;
 }
 .ap-rollover-title {
-  font-family: var(--font-display);
-  font-size: 26px;
-  font-weight: 800;
-  letter-spacing: -0.01em;
-  background: linear-gradient(90deg, var(--accent-2), var(--accent), var(--accent-3));
-  -webkit-background-clip: text; background-clip: text;
-  -webkit-text-fill-color: transparent;
   margin-bottom: 8px;
+  background: var(--rollover-title-gradient) !important;
+  color: var(--text);
+  font-family: var(--font-display);
+  font-size: var(--type-page-title);
+  font-weight: var(--weight-extrabold);
+  letter-spacing: 0;
+  filter: none !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
 }
 .ap-rollover-label { color: #fff; font-weight: 700; font-size: 15px; margin-bottom: 4px; }
 .ap-rollover-amt { font-family: var(--font-mono); font-size: 22px; color: var(--text); }
 
 
 /* vivid rollover title gradient */
-.ap-rollover-title {
-  background: linear-gradient(90deg, #22d3ee 0%, var(--primary) 35%, #a855f7 65%, #facc15 100%) !important;
-  -webkit-background-clip: text !important; background-clip: text !important;
-  -webkit-text-fill-color: transparent !important;
-  filter: drop-shadow(0 0 14px color-mix(in oklch, var(--accent) 45%, transparent));
-}
 
 
 /* merged hero + rollover */
@@ -4026,23 +4009,8 @@ select.twk-field {
 
 
 /* ════ refined "Approved" status badge ════ */
-.ap-status {
-  background: color-mix(in oklch, #1f8a5b 16%, var(--bg-elev)) !important;
-  color: #2fd396 !important;
-  border: 1px solid color-mix(in oklch, #1f8a5b 45%, transparent) !important;
-  text-shadow: none !important;
-  font-weight: 600 !important;
-}
-[data-theme="light"] .ap-status {
-  background: #e7f7ef !important;
-  color: #1f8a5b !important;
-  border-color: #bfe6d2 !important;
-}
-
-
 /* remove glow behind Rollover title (yellow gradient text, no drop-shadow) */
 .ap-hero-rollover .ap-rollover-title,
-.ap-rollover-title { filter: none !important; }
 [data-theme="light"] .ap-hero-rollover .ap-rollover-title { filter: none !important; }
 
 
