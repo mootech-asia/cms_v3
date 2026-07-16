@@ -26,7 +26,7 @@ const PROVIDERS = [
 const GAME_TAGS = ['Hot', 'New', '2x', 'Top', '⚡', 'Live', 'VIP'];
 const assetPath = (path) => `${import.meta.env.BASE_URL}${path}`;
 
-function makeGames(category, count, hueBase) {
+function makeGames(category, count, hueBase, imagePrefix = 'game') {
   const titles = {
     slots: ['Neon Vault', 'Cosmic Drift', 'Sugar Rush 9000', 'Golden Hex', 'Wild Riders',
             'Volt Strike', 'Hyper Reels', 'Crown of Aether', 'Pixel Pirates', 'Mega Moon',
@@ -57,7 +57,7 @@ function makeGames(category, count, hueBase) {
       players: 80 + ((i * 137) % 4200),
       rtp: (94 + ((i * 7) % 6) + ((i * 13) % 100) / 100).toFixed(2),
       maxWin: `${500 + ((i * 91) % 50000)}x`,
-      image: assetPath(`assets/mock/game-${String((i % 12) + 1).padStart(2, '0')}.webp`),
+      image: assetPath(`assets/mock/${imagePrefix}-${String((i % 12) + 1).padStart(2, '0')}.webp`),
     });
   }
   return arr;
@@ -65,7 +65,7 @@ function makeGames(category, count, hueBase) {
 
 const GAMES = {
   slots:     makeGames('slots',     24, 280),
-  live:      makeGames('live',      12,  10),
+  live:      makeGames('live',      12,  10, 'live'),
   originals: makeGames('originals', 12, 200),
   table:     makeGames('table',     12, 130),
 };

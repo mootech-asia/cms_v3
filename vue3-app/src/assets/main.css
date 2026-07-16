@@ -4691,14 +4691,6 @@ select.twk-field {
   flex-direction: column;
 }
 .sidebar.collapsed .sb-section-toggle { display: none; }
-.sb-collapse-account {
-  display: grid;
-  flex: 0 0 36px;
-  width: 36px;
-  height: 36px;
-  margin: 0 -8px 8px 0;
-}
-.sidebar.collapsed .sb-collapse-account { display: none; }
 .sidebar-foot { justify-content: flex-end; }
 
 .section-title-group {
@@ -4933,23 +4925,79 @@ select.twk-field {
 }
 
 
-/* Sidebar collapse placement */
+/* Sidebar edge handle */
 .sb-collapse-inline {
   width: 34px;
   height: 100%;
   min-height: 38px;
   border-radius: 10px;
 }
+.sb-edge-handle {
+  width: 42px;
+  height: 58px;
+  grid-template-columns: 4px 18px;
+  place-content: center;
+  column-gap: 5px;
+  padding: 0;
+  border: 1px solid var(--line-hi);
+  border-radius: 0 12px 12px 0;
+  background: var(--bg-elev);
+  color: var(--text-mid);
+  cursor: pointer;
+  box-shadow: inset 3px 0 0 var(--bg);
+  transition: color .16s ease, border-color .16s ease, background .16s ease;
+}
+.sb-edge-handle:hover {
+  color: var(--text);
+  border-color: var(--accent);
+  background: var(--bg-card-hi);
+}
+.sb-edge-handle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.sb-edge-handle > svg { display: block; }
+.sb-edge-grip {
+  display: grid;
+  gap: 3px;
+  place-items: center;
+}
+.sb-edge-grip i {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: .65;
+}
+.sb-collapse-account {
+  position: absolute;
+  z-index: 75;
+  top: 54%;
+  right: -21px;
+  transform: translateY(-50%);
+}
 .sidebar-foot { display: none; }
 .sidebar.collapsed .sidebar-foot {
   display: flex;
+  position: absolute;
+  z-index: 75;
+  top: 54%;
+  right: -21px;
+  transform: translateY(-50%);
   justify-content: center;
+  padding: 0;
+  border: 0;
 }
-.sidebar.collapsed .sb-collapse-compact { display: grid; }
+.sidebar.collapsed .sb-collapse-compact {
+  display: grid;
+  border-radius: 12px 0 0 12px;
+  box-shadow: inset -3px 0 0 var(--bg);
+}
 
 @media (max-width: 900px) {
   .sidebar-foot,
   .sidebar.collapsed .sidebar-foot { display: none; }
+  .sb-collapse-account { display: none; }
   .sb-collapse-inline:not(.sb-collapse-money) { display: grid; }
 }
 
