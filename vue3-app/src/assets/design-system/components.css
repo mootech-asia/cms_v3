@@ -1,0 +1,129 @@
+/* Shared UI contracts.
+   Existing CMS classes are grouped here as legacy aliases so new screens can use
+   semantic ui-* classes without changing established layouts. */
+
+/* Typography hierarchy */
+.ui-page-title,
+.ap-h1 {
+  font-family: var(--font-display);
+  font-size: var(--type-page-title);
+  font-weight: var(--weight-bold);
+  line-height: var(--line-heading);
+}
+
+.ui-section-title,
+.section-title {
+  font-family: var(--font-display);
+  font-size: var(--type-section-title);
+  font-weight: var(--weight-bold);
+  line-height: var(--line-heading);
+}
+
+.ui-card-title,
+.gcard-title {
+  font-size: var(--type-card-title);
+  font-weight: var(--weight-semibold);
+}
+
+.ui-meta {
+  color: var(--text-mid);
+  font-size: var(--type-meta);
+}
+
+/* Buttons */
+.ui-button {
+  min-height: var(--control-size-md);
+  padding: 0 var(--control-pad-x-md);
+  border: 1px solid var(--control-border);
+  border-radius: var(--radius-control);
+  background: var(--control-bg);
+  color: var(--control-text);
+  font: inherit;
+  font-size: var(--type-button);
+  font-weight: var(--weight-semibold);
+  transition:
+    color var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard),
+    filter var(--duration-fast) var(--ease-standard);
+}
+
+.ui-button:hover:not(:disabled) {
+  border-color: var(--control-hover-border);
+  color: var(--control-hover-text);
+}
+
+.ui-button--primary,
+.ap-btn.primary,
+.ap-btn-wide.ap-grad,
+.rec-confirm {
+  border-color: transparent;
+  background: var(--gradient-primary);
+  color: var(--text-on-accent);
+}
+
+.ui-button--primary {
+  box-shadow: var(--shadow-primary);
+}
+
+.ui-button:disabled,
+.ap-btn-wide:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Tabs and filters */
+.ui-tab {
+  min-height: var(--control-size-sm);
+  padding: 0 var(--control-pad-x-md);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-control);
+  background: var(--bg-card);
+  color: var(--text-mid);
+  font: inherit;
+  font-size: var(--type-body-sm);
+  font-weight: var(--weight-semibold);
+  white-space: nowrap;
+}
+
+.ui-tab:hover:not(.active) {
+  border-color: var(--line-hi);
+  color: var(--text);
+}
+
+.ui-tab.active,
+.ui-tab[aria-selected="true"] {
+  border-color: var(--control-active-border);
+  background: var(--control-active-bg);
+  color: var(--control-active-text);
+  text-shadow: var(--control-active-text-shadow);
+  box-shadow: var(--control-active-shadow);
+}
+
+/* Tables */
+.ui-table,
+.rec-table {
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--text-mid);
+}
+
+.ui-table thead th,
+.rec-table thead th {
+  background: var(--table-header-bg);
+  color: var(--table-header-text);
+  font-size: var(--type-label);
+  font-weight: var(--weight-bold);
+}
+
+.ui-table tbody tr,
+.rec-table tbody tr {
+  background: var(--table-row-bg);
+  border-bottom: 1px solid var(--table-row-border);
+}
+
+@media (max-width: 700px) {
+  .ui-section-title,
+  .section-title {
+    font-size: var(--type-section-title-mobile);
+  }
+}
