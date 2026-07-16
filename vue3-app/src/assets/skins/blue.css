@@ -18,6 +18,8 @@
   --text-mid: rgba(234, 245, 255, 0.7);
   --text-dim: rgba(234, 245, 255, 0.42);
   --text-on-accent: #ffffff;
+  --icon-muted: rgba(234, 245, 255, 0.72);
+  --cal-icon: var(--icon-muted);
 
   /* Brand and status */
   --accent: #2473ff;
@@ -93,6 +95,8 @@
   --table-header-text: var(--text-on-accent);
   --table-row-bg: var(--bg-card);
   --table-row-border: var(--line);
+  --record-total-bg: linear-gradient(180deg, #1a1f2b 0%, #12151d 100%);
+  --record-total-border: var(--line-hi);
 
   /* Shadows */
   --shadow-card: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 6px 18px rgba(0, 0, 0, 0.4);
@@ -120,6 +124,8 @@
   --text: #0f0f17;
   --text-mid: rgba(15, 15, 23, 0.72);
   --text-dim: rgba(15, 15, 23, 0.45);
+  --icon-muted: rgba(15, 15, 23, 0.55);
+  --cal-icon: var(--icon-muted);
 
   --control-bg: linear-gradient(180deg, #ffffff 0%, #f7f6f1 100%);
   --control-text: var(--text-mid);
@@ -130,6 +136,8 @@
   --control-active-shadow: 0 0 0 1.5px var(--accent);
 
   --table-row-bg: #ffffff;
+  --record-total-bg: #ffffff;
+  --record-total-border: var(--line-hi);
   --shadow-card: 0 1px 0 rgba(255, 255, 255, 0.6) inset, 0 4px 14px rgba(15, 15, 23, 0.08);
   --shadow-primary: 0 2px 8px rgba(36, 115, 255, 0.18);
   --shadow-primary-sm: 0 2px 8px rgba(36, 115, 255, 0.18);
