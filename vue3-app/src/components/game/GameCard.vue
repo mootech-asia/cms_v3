@@ -1,6 +1,6 @@
 <template>
   <article class="gcard" style="cursor: default">
-    <div class="gcard-art" :style="{ '--gcard-bg': game.bg }">
+    <div class="gcard-art">
       <span v-if="game.tag"
         class="gcard-tag"
         :class="{ hot: game.tag === 'Hot', new: game.tag === 'New' }"
