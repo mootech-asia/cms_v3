@@ -42,6 +42,7 @@
   --danger: var(--negative);
   --pos: var(--positive);
   --neg: var(--negative);
+  --tier-next: #c47b22;
   --status-success-bg: color-mix(in oklch, #1f8a5b 16%, var(--bg-elev));
   --status-success-text: #2fd396;
   --status-success-border: color-mix(in oklch, #1f8a5b 45%, transparent);
