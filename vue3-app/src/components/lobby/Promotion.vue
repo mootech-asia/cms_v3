@@ -53,13 +53,13 @@ const props = defineProps({
   pageSize:       { type: Number,  default: 2 },
 });
 const emit = defineEmits(['open']);
-const { locale, t } = useLocale();
+const { t, text } = useLocale();
 
 const collapsed = ref(false);
 const visibleCount = ref(props.pageSize);
 
 const offers = computed(() => {
-  const copy = PROMOTION_COPY[locale.value] || PROMOTION_COPY.zh;
+  const copy = text(PROMOTION_COPY);
   return PROMOTION_OFFERS.map((offer) => ({ ...offer, ...(copy[offer.id] || {}) }));
 });
 

@@ -18,12 +18,20 @@ export function isStudioPreviewMode() {
   }
 }
 
+let studioDraftMemo = { raw: undefined, parsed: null };
+
 export function readStudioDraft(storage = window.localStorage) {
   try {
     const raw = storage.getItem(STUDIO_DRAFT_STORAGE_KEY);
-    if (!raw) return null;
+    if (raw === studioDraftMemo.raw) return studioDraftMemo.parsed;
+    if (!raw) {
+      studioDraftMemo = { raw, parsed: null };
+      return null;
+    }
     const parsed = JSON.parse(raw);
-    return parsed && typeof parsed === 'object' ? parsed : null;
+    const result = parsed && typeof parsed === 'object' ? parsed : null;
+    studioDraftMemo = { raw, parsed: result };
+    return result;
   } catch {
     return null;
   }
@@ -37,11 +45,30 @@ export function writeStudioDraft(draft, storage = window.localStorage) {
   }
 }
 
-export function clearStudioDraft(storage = window.localStorage) {
+function readJSON(key, storage) {
+  return JSON.parse(storage.getItem(key));
+}
+
+function writeJSON(key, value, storage) {
   try {
-    storage.removeItem(STUDIO_DRAFT_STORAGE_KEY);
+    storage.setItem(key, JSON.stringify(value));
   } catch {
-    // Ignore.
+    // The draft/session state remains usable when persistent storage is unavailable.
+  }
+}
+
+// Reads `storageKey`, preferring the studio draft's `draftField` while in
+// studio preview mode. `normalize` shapes the raw value (draft or storage)
+// into the public return type; `fallback` covers a missing/invalid value.
+function readWithDraftOverride(storageKey, draftField, normalize, fallback, storage = window.localStorage) {
+  if (isStudioPreviewMode()) {
+    const draft = readStudioDraft(storage);
+    if (draft?.[draftField]) return normalize(draft[draftField]);
+  }
+  try {
+    return normalize(readJSON(storageKey, storage));
+  } catch {
+    return fallback();
   }
 }
 
@@ -98,25 +125,18 @@ export function normalizeVisibleLocaleIds(value) {
 }
 
 export function readVisibleLocaleIds(storage = window.localStorage) {
-  if (isStudioPreviewMode()) {
-    const draft = readStudioDraft(storage);
-    if (draft?.visibleLocaleIds) return normalizeVisibleLocaleIds(draft.visibleLocaleIds);
-  }
-  try {
-    const saved = JSON.parse(storage.getItem(LOCALE_VISIBILITY_STORAGE_KEY));
-    return normalizeVisibleLocaleIds(saved);
-  } catch {
-    return [...DEFAULT_VISIBLE_LOCALE_IDS];
-  }
+  return readWithDraftOverride(
+    LOCALE_VISIBILITY_STORAGE_KEY,
+    'visibleLocaleIds',
+    normalizeVisibleLocaleIds,
+    () => [...DEFAULT_VISIBLE_LOCALE_IDS],
+    storage,
+  );
 }
 
 export function writeVisibleLocaleIds(ids, storage = window.localStorage) {
   const normalized = normalizeVisibleLocaleIds(ids);
-  try {
-    storage.setItem(LOCALE_VISIBILITY_STORAGE_KEY, JSON.stringify(normalized));
-  } catch {
-    // Locale visibility still works for the current session when storage is unavailable.
-  }
+  writeJSON(LOCALE_VISIBILITY_STORAGE_KEY, normalized, storage);
   return normalized;
 }
 
@@ -133,29 +153,25 @@ export function normalizeVisibleSkinIds(value) {
     : [SKINS[0].id];
 }
 
+function normalizeLobbyLayout(saved, storage) {
+  if (saved && typeof saved === 'object') {
+    return {
+      order: normalizeLobbyOrder(saved.order),
+      hidden: normalizeHiddenSections(saved.hidden),
+    };
+  }
+  const legacyOrder = readJSON(LEGACY_LOBBY_ORDER_STORAGE_KEY, storage);
+  return { order: normalizeLobbyOrder(legacyOrder), hidden: [] };
+}
+
 export function readLobbyLayout(storage = window.localStorage) {
-  if (isStudioPreviewMode()) {
-    const draft = readStudioDraft(storage);
-    if (draft?.layout) {
-      return {
-        order: normalizeLobbyOrder(draft.layout.order),
-        hidden: normalizeHiddenSections(draft.layout.hidden),
-      };
-    }
-  }
-  try {
-    const saved = JSON.parse(storage.getItem(LOBBY_LAYOUT_STORAGE_KEY));
-    if (saved && typeof saved === 'object') {
-      return {
-        order: normalizeLobbyOrder(saved.order),
-        hidden: normalizeHiddenSections(saved.hidden),
-      };
-    }
-    const legacyOrder = JSON.parse(storage.getItem(LEGACY_LOBBY_ORDER_STORAGE_KEY));
-    return { order: normalizeLobbyOrder(legacyOrder), hidden: [] };
-  } catch {
-    return { order: [...DEFAULT_LOBBY_SECTION_ORDER], hidden: [] };
-  }
+  return readWithDraftOverride(
+    LOBBY_LAYOUT_STORAGE_KEY,
+    'layout',
+    (saved) => normalizeLobbyLayout(saved, storage),
+    () => ({ order: [...DEFAULT_LOBBY_SECTION_ORDER], hidden: [] }),
+    storage,
+  );
 }
 
 export function writeLobbyLayout(layout, storage = window.localStorage) {
@@ -163,35 +179,24 @@ export function writeLobbyLayout(layout, storage = window.localStorage) {
     order: normalizeLobbyOrder(layout?.order),
     hidden: normalizeHiddenSections(layout?.hidden),
   };
-  try {
-    storage.setItem(LOBBY_LAYOUT_STORAGE_KEY, JSON.stringify({ version: 1, ...normalized }));
-    storage.setItem(LEGACY_LOBBY_ORDER_STORAGE_KEY, JSON.stringify(normalized.order));
-  } catch {
-    // The draft remains usable when persistent storage is unavailable.
-  }
+  writeJSON(LOBBY_LAYOUT_STORAGE_KEY, { version: 1, ...normalized }, storage);
+  writeJSON(LEGACY_LOBBY_ORDER_STORAGE_KEY, normalized.order, storage);
   return normalized;
 }
 
 export function readVisibleSkinIds(storage = window.localStorage) {
-  if (isStudioPreviewMode()) {
-    const draft = readStudioDraft(storage);
-    if (draft?.visibleSkinIds) return normalizeVisibleSkinIds(draft.visibleSkinIds);
-  }
-  try {
-    const saved = JSON.parse(storage.getItem(SKIN_VISIBILITY_STORAGE_KEY));
-    return normalizeVisibleSkinIds(saved);
-  } catch {
-    return [...DEFAULT_VISIBLE_SKIN_IDS];
-  }
+  return readWithDraftOverride(
+    SKIN_VISIBILITY_STORAGE_KEY,
+    'visibleSkinIds',
+    normalizeVisibleSkinIds,
+    () => [...DEFAULT_VISIBLE_SKIN_IDS],
+    storage,
+  );
 }
 
 export function writeVisibleSkinIds(ids, storage = window.localStorage) {
   const normalized = normalizeVisibleSkinIds(ids);
-  try {
-    storage.setItem(SKIN_VISIBILITY_STORAGE_KEY, JSON.stringify(normalized));
-  } catch {
-    // Skin visibility still works for the current session when storage is unavailable.
-  }
+  writeJSON(SKIN_VISIBILITY_STORAGE_KEY, normalized, storage);
   return normalized;
 }
 
@@ -224,24 +229,17 @@ export function normalizeHeroBanners(value) {
 }
 
 export function readHeroBanners(storage = window.localStorage) {
-  if (isStudioPreviewMode()) {
-    const draft = readStudioDraft(storage);
-    if (draft?.banners) return normalizeHeroBanners(draft.banners);
-  }
-  try {
-    const saved = JSON.parse(storage.getItem(HERO_BANNERS_STORAGE_KEY));
-    return saved ? normalizeHeroBanners(saved) : defaultHeroBanners();
-  } catch {
-    return defaultHeroBanners();
-  }
+  return readWithDraftOverride(
+    HERO_BANNERS_STORAGE_KEY,
+    'banners',
+    (saved) => (saved ? normalizeHeroBanners(saved) : defaultHeroBanners()),
+    defaultHeroBanners,
+    storage,
+  );
 }
 
 export function writeHeroBanners(banners, storage = window.localStorage) {
   const normalized = normalizeHeroBanners(banners);
-  try {
-    storage.setItem(HERO_BANNERS_STORAGE_KEY, JSON.stringify(normalized));
-  } catch {
-    // The draft remains usable when persistent storage is unavailable.
-  }
+  writeJSON(HERO_BANNERS_STORAGE_KEY, normalized, storage);
   return normalized;
 }

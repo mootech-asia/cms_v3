@@ -84,6 +84,7 @@
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { useClickOutside } from '@/composables/useClickOutside.js';
 
 const props = defineProps({
   title: { type: String, required: true },
@@ -176,18 +177,15 @@ function tryPicker(e) {
   try { inp.showPicker(); } catch { inp.focus(); }
 }
 
+useClickOutside(statusWrapEl, () => { statusOpen.value = false; });
+
 let secTimer;
 onMounted(() => {
   if (cfg.value.autoRefresh)
     secTimer = setInterval(() => { secs.value = secs.value <= 1 ? 20 : secs.value - 1; }, 1000);
 
-  const onDoc = (e) => {
-    if (statusWrapEl.value && !statusWrapEl.value.contains(e.target)) statusOpen.value = false;
-  };
-  document.addEventListener('mousedown', onDoc);
   onUnmounted(() => {
     clearInterval(secTimer);
-    document.removeEventListener('mousedown', onDoc);
   });
 });
 </script>

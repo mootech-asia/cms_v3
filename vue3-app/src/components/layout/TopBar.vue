@@ -146,6 +146,7 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { useLocale } from '@/composables/useLocale.js';
+import { useClickOutside } from '@/composables/useClickOutside.js';
 
 const props = defineProps({
   user:    { type: Object, default: null },
@@ -184,17 +185,14 @@ function selectSkin(id) {
 }
 
 function onScroll() { scrolled.value = window.scrollY > 8; }
-function onDocClick(e) {
-  if (menuRef.value && !menuRef.value.contains(e.target)) menuOpen.value = false;
-  if (skinRef.value && !skinRef.value.contains(e.target)) skinMenuOpen.value = false;
-}
+
+useClickOutside(menuRef, () => { menuOpen.value = false; });
+useClickOutside(skinRef, () => { skinMenuOpen.value = false; });
 
 onMounted(() => {
   window.addEventListener('scroll', onScroll);
-  document.addEventListener('mousedown', onDocClick);
 });
 onUnmounted(() => {
   window.removeEventListener('scroll', onScroll);
-  document.removeEventListener('mousedown', onDocClick);
 });
 </script>

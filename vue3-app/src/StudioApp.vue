@@ -45,6 +45,7 @@
 import { onBeforeUnmount, ref } from 'vue';
 import DesignStudio from '@/components/design/DesignStudio.vue';
 import { useLocale } from '@/composables/useLocale.js';
+import { STUDIO_PREVIEW_QUERY_PARAM } from '@/design/siteFactory.js';
 
 const { t } = useLocale();
 
@@ -54,7 +55,7 @@ const reloadToken = ref(Date.now());
 // The query param stays constant so live preview (draft broadcast via
 // localStorage) works without a reload; :key="reloadToken" below still forces
 // a full iframe remount as a fallback when needed.
-const previewSrc = '../?studio-preview=1';
+const previewSrc = `../?${STUDIO_PREVIEW_QUERY_PARAM}=1`;
 
 let reloadTimer = null;
 

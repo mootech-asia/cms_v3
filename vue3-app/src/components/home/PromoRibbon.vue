@@ -22,8 +22,8 @@ import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { PROMO_RIBBON_COPY } from '@/data/i18n.js';
 import { useLocale } from '@/composables/useLocale.js';
 
-const { locale, t } = useLocale();
-const items = computed(() => PROMO_RIBBON_COPY[locale.value] || PROMO_RIBBON_COPY.zh);
+const { t, text } = useLocale();
+const items = computed(() => text(PROMO_RIBBON_COPY));
 const doubled = computed(() => [...items.value, ...items.value]);
 
 const now = ref(new Date());

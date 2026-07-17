@@ -63,13 +63,13 @@ const props = defineProps({
 const idx         = ref(0);
 const touchStartX = ref(null);
 const autoTimer   = ref(null);
-const { locale } = useLocale();
+const { text } = useLocale();
 
 const slides = computed(() => (props.banners.length ? props.banners : HERO_SLIDES));
 const len    = computed(() => slides.value.length);
 
 const localizedSlides = computed(() => {
-  const copy = HERO_COPY[locale.value] || HERO_COPY.zh;
+  const copy = text(HERO_COPY);
   return slides.value.map((slide, index) => ({ ...slide, ...(copy[index] || {}) }));
 });
 

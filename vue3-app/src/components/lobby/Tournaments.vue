@@ -60,9 +60,9 @@ import { TOURNAMENT_COPY } from '@/data/i18n.js';
 import { useLocale } from '@/composables/useLocale.js';
 
 const collapsed = ref(false);
-const { locale, t } = useLocale();
+const { t, text } = useLocale();
 const localizedTournaments = computed(() => {
-  const copy = TOURNAMENT_COPY[locale.value] || TOURNAMENT_COPY.zh;
+  const copy = text(TOURNAMENT_COPY);
   return TOURNAMENTS.map((item, index) => ({ ...item, ...(copy[index] || {}) }));
 });
 </script>

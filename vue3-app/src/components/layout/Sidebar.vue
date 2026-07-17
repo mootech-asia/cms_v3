@@ -112,39 +112,7 @@
             <circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18" />
           </svg>
           <span class="sb-flag" aria-hidden="true">
-            <svg v-if="locale === 'zh'" width="18" height="12" viewBox="0 0 30 20">
-              <rect width="30" height="20" fill="#de2910" />
-              <polygon points="5.000,2.000 5.674,4.073 7.853,4.073 6.090,5.354 6.763,7.427 5.000,6.146 3.237,7.427 3.910,5.354 2.147,4.073 4.326,4.073" fill="#ffde00" />
-              <polygon points="9.143,2.514 9.620,1.966 9.246,1.343 9.914,1.628 10.391,1.080 10.328,1.803 10.996,2.088 10.288,2.251 10.224,2.975 9.851,2.352" fill="#ffde00" />
-              <polygon points="11.010,4.141 11.662,3.821 11.560,3.102 12.065,3.624 12.718,3.304 12.378,3.946 12.884,4.467 12.168,4.343 11.829,4.985 11.726,4.266" fill="#ffde00" />
-              <polygon points="11.038,6.725 11.765,6.699 11.964,6.001 12.213,6.683 12.939,6.657 12.367,7.105 12.616,7.787 12.014,7.382 11.442,7.830 11.641,7.131" fill="#ffde00" />
-              <polygon points="9.219,8.375 9.899,8.632 10.353,8.064 10.319,8.790 10.999,9.046 10.298,9.239 10.265,9.964 9.865,9.357 9.165,9.550 9.618,8.982" fill="#ffde00" />
-            </svg>
-            <svg v-else-if="locale === 'en'" width="18" height="12" viewBox="0 0 60 40">
-              <rect width="60" height="40" fill="#012169" />
-              <path d="M0 0 60 40M60 0 0 40" stroke="#fff" stroke-width="6" />
-              <path d="M30 0v40M0 20h60" stroke="#fff" stroke-width="10" />
-              <path d="M30 0v40M0 20h60" stroke="#C8102E" stroke-width="6" />
-            </svg>
-            <svg v-else-if="locale === 'ko'" width="18" height="12" viewBox="0 0 60 40">
-              <rect width="60" height="40" fill="#fff" />
-              <circle cx="30" cy="20" r="8" fill="#cd2e3a" />
-              <path d="M22 20a8 8 0 0 1 16 0 4 4 0 0 1-8 0 4 4 0 0 0-8 0Z" fill="#0047a0" />
-              <g stroke="#000" stroke-width="1.4">
-                <path d="M11 11l4 6M13 9l4 6M15 7l4 6" />
-                <path d="M41 23l4 6M43 21l4 6M45 19l4 6" />
-                <path d="M45 11l-4 6M47 13l-4 6M49 15l-4 6" />
-                <path d="M11 29l4-6M13 31l4-6M15 33l4-6" />
-              </g>
-            </svg>
-            <svg v-else-if="locale === 'th'" width="18" height="12" viewBox="0 0 30 20">
-              <rect width="30" height="20" fill="#fff" />
-              <rect width="30" height="4" fill="#a51931" />
-              <rect y="16" width="30" height="4" fill="#a51931" />
-              <rect y="4" width="30" height="3.33" fill="#f4f5f8" />
-              <rect y="12.67" width="30" height="3.33" fill="#f4f5f8" />
-              <rect y="7.33" width="30" height="5.34" fill="#2d2a4a" />
-            </svg>
+            <LocaleFlag :code="locale" />
           </span>
           <span class="sb-lang-label">{{ LANGS[locale].label }}</span>
           <svg class="sb-lang-caret" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -158,39 +126,7 @@
             @click="setLocale(k); langOpen = false"
           >
             <span class="sb-flag">
-              <svg v-if="k === 'zh'" width="18" height="12" viewBox="0 0 30 20">
-                <rect width="30" height="20" fill="#de2910" />
-                <polygon points="5.000,2.000 5.674,4.073 7.853,4.073 6.090,5.354 6.763,7.427 5.000,6.146 3.237,7.427 3.910,5.354 2.147,4.073 4.326,4.073" fill="#ffde00" />
-                <polygon points="9.143,2.514 9.620,1.966 9.246,1.343 9.914,1.628 10.391,1.080 10.328,1.803 10.996,2.088 10.288,2.251 10.224,2.975 9.851,2.352" fill="#ffde00" />
-                <polygon points="11.010,4.141 11.662,3.821 11.560,3.102 12.065,3.624 12.718,3.304 12.378,3.946 12.884,4.467 12.168,4.343 11.829,4.985 11.726,4.266" fill="#ffde00" />
-                <polygon points="11.038,6.725 11.765,6.699 11.964,6.001 12.213,6.683 12.939,6.657 12.367,7.105 12.616,7.787 12.014,7.382 11.442,7.830 11.641,7.131" fill="#ffde00" />
-                <polygon points="9.219,8.375 9.899,8.632 10.353,8.064 10.319,8.790 10.999,9.046 10.298,9.239 10.265,9.964 9.865,9.357 9.165,9.550 9.618,8.982" fill="#ffde00" />
-              </svg>
-              <svg v-else-if="k === 'en'" width="18" height="12" viewBox="0 0 60 40">
-                <rect width="60" height="40" fill="#012169" />
-                <path d="M0 0 60 40M60 0 0 40" stroke="#fff" stroke-width="6" />
-                <path d="M30 0v40M0 20h60" stroke="#fff" stroke-width="10" />
-                <path d="M30 0v40M0 20h60" stroke="#C8102E" stroke-width="6" />
-              </svg>
-              <svg v-else-if="k === 'ko'" width="18" height="12" viewBox="0 0 60 40">
-                <rect width="60" height="40" fill="#fff" />
-                <circle cx="30" cy="20" r="8" fill="#cd2e3a" />
-                <path d="M22 20a8 8 0 0 1 16 0 4 4 0 0 1-8 0 4 4 0 0 0-8 0Z" fill="#0047a0" />
-                <g stroke="#000" stroke-width="1.4">
-                  <path d="M11 11l4 6M13 9l4 6M15 7l4 6" />
-                  <path d="M41 23l4 6M43 21l4 6M45 19l4 6" />
-                  <path d="M45 11l-4 6M47 13l-4 6M49 15l-4 6" />
-                  <path d="M11 29l4-6M13 31l4-6M15 33l4-6" />
-                </g>
-              </svg>
-              <svg v-else-if="k === 'th'" width="18" height="12" viewBox="0 0 30 20">
-                <rect width="30" height="20" fill="#fff" />
-                <rect width="30" height="4" fill="#a51931" />
-                <rect y="16" width="30" height="4" fill="#a51931" />
-                <rect y="4" width="30" height="3.33" fill="#f4f5f8" />
-                <rect y="12.67" width="30" height="3.33" fill="#f4f5f8" />
-                <rect y="7.33" width="30" height="5.34" fill="#2d2a4a" />
-              </svg>
+              <LocaleFlag :code="k" />
             </span>
             <span>{{ v.label }}</span>
             <svg v-if="locale === k" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
@@ -224,8 +160,10 @@
 <script setup>
 import { computed, reactive, ref, onMounted, onUnmounted } from 'vue';
 import Icon from '@/components/ui/Icon.vue';
+import LocaleFlag from '@/components/ui/LocaleFlag.vue';
 import { useLocale } from '@/composables/useLocale.js';
-import { LOCALE_VISIBILITY_STORAGE_KEY, readVisibleLocaleIds } from '@/design/siteFactory.js';
+import { useClickOutside } from '@/composables/useClickOutside.js';
+import { LOCALE_VISIBILITY_STORAGE_KEY, STUDIO_DRAFT_STORAGE_KEY, readVisibleLocaleIds } from '@/design/siteFactory.js';
 
 const props = defineProps({
   collapsed:  { type: Boolean, default: false },
@@ -256,9 +194,11 @@ const visibleLangs = computed(() =>
   Object.fromEntries(Object.entries(LANGS).filter(([k]) => visibleLocaleIds.value.includes(k)))
 );
 function syncVisibleLocales(event) {
-  if (event.key !== null && event.key !== LOCALE_VISIBILITY_STORAGE_KEY) return;
+  if (event.key !== null && event.key !== LOCALE_VISIBILITY_STORAGE_KEY && event.key !== STUDIO_DRAFT_STORAGE_KEY) return;
   visibleLocaleIds.value = readVisibleLocaleIds();
 }
+
+useClickOutside(langRef, () => { langOpen.value = false; });
 
 const sections = computed(() => [
   {
@@ -337,16 +277,11 @@ function handleWithdraw() {
   closeMenu();
 }
 
-function onDocClick(e) {
-  if (langRef.value && !langRef.value.contains(e.target)) langOpen.value = false;
-}
 onMounted(() => {
-  document.addEventListener('mousedown', onDocClick);
   window.addEventListener('storage', syncVisibleLocales);
   syncVisibleLocales({ key: null });
 });
 onUnmounted(() => {
-  document.removeEventListener('mousedown', onDocClick);
   window.removeEventListener('storage', syncVisibleLocales);
 });
 </script>

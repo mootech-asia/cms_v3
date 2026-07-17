@@ -1,4 +1,4 @@
-import { computed, readonly, ref } from 'vue';
+import { readonly, ref } from 'vue';
 import { LANGS, LOCALE_STORAGE_KEY, TRANSLATIONS } from '@/data/i18n.js';
 
 const fallbackLocale = 'zh';
@@ -69,7 +69,6 @@ export function useLocale() {
 
   return {
     locale: readonly(locale),
-    currentLanguage: computed(() => LANGS[locale.value]),
     languages: LANGS,
     setLocale,
     t: translate,
