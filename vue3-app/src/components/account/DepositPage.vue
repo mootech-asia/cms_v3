@@ -80,7 +80,7 @@
           </div>
         </div>
 
-        <button class="ap-btn-wide ap-grad" @click="step = 1; emit('navigate', 'Account Overview')">{{ t('deposit.qr.complete') }}</button>
+        <button class="ap-btn-wide ap-grad" @click="finishQrStep">{{ t('deposit.qr.complete') }}</button>
         <button class="ap-btn-wide outline" @click="step = 1">{{ t('deposit.qr.back') }}</button>
       </div>
     </div>
@@ -366,6 +366,14 @@ function pick(n) {
 }
 
 function submitApplication() {
+  if (method.value !== 'bank') {
+    step.value = 3;
+    return;
+  }
+  applicationResult.value = applicationMessages[provider.value];
+}
+
+function finishQrStep() {
   applicationResult.value = applicationMessages[provider.value];
 }
 
@@ -374,6 +382,11 @@ function closeApplicationResult() {
   const selectedMethod = method.value;
   applicationResult.value = null;
   if (!success) return;
-  step.value = selectedMethod === 'bank' ? 2 : 3;
+  if (selectedMethod === 'bank') {
+    step.value = 2;
+    return;
+  }
+  step.value = 1;
+  emit('navigate', 'Account Overview');
 }
 </script>
