@@ -137,6 +137,14 @@
                 <path d="M11 29l4-6M13 31l4-6M15 33l4-6" />
               </g>
             </svg>
+            <svg v-else-if="locale === 'th'" width="18" height="12" viewBox="0 0 30 20">
+              <rect width="30" height="20" fill="#fff" />
+              <rect width="30" height="4" fill="#a51931" />
+              <rect y="16" width="30" height="4" fill="#a51931" />
+              <rect y="4" width="30" height="3.33" fill="#f4f5f8" />
+              <rect y="12.67" width="30" height="3.33" fill="#f4f5f8" />
+              <rect y="7.33" width="30" height="5.34" fill="#2d2a4a" />
+            </svg>
           </span>
           <span class="sb-lang-label">{{ LANGS[locale].label }}</span>
           <svg class="sb-lang-caret" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -174,6 +182,14 @@
                   <path d="M45 11l-4 6M47 13l-4 6M49 15l-4 6" />
                   <path d="M11 29l4-6M13 31l4-6M15 33l4-6" />
                 </g>
+              </svg>
+              <svg v-else-if="k === 'th'" width="18" height="12" viewBox="0 0 30 20">
+                <rect width="30" height="20" fill="#fff" />
+                <rect width="30" height="4" fill="#a51931" />
+                <rect y="16" width="30" height="4" fill="#a51931" />
+                <rect y="4" width="30" height="3.33" fill="#f4f5f8" />
+                <rect y="12.67" width="30" height="3.33" fill="#f4f5f8" />
+                <rect y="7.33" width="30" height="5.34" fill="#2d2a4a" />
               </svg>
             </span>
             <span>{{ v.label }}</span>
