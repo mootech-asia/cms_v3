@@ -1,8 +1,10 @@
 import { DEFAULT_SKIN, SKINS } from '../skins/index.js';
+import { LANGS } from '../data/i18n.js';
 
 export const LOBBY_LAYOUT_STORAGE_KEY = 'cms-v3:lobby-layout';
 export const LEGACY_LOBBY_ORDER_STORAGE_KEY = 'cms-v3:lobby-section-order';
 export const SKIN_VISIBILITY_STORAGE_KEY = 'cms-v3:visible-skins';
+export const LOCALE_VISIBILITY_STORAGE_KEY = 'cms-v3:visible-locales';
 
 export const DEFAULT_LOBBY_SECTION_ORDER = Object.freeze([
   'recently-played',
@@ -45,6 +47,34 @@ export function normalizeLobbyOrder(value) {
 export function normalizeHiddenSections(value) {
   return [...new Set((Array.isArray(value) ? value : [])
     .filter((id) => DEFAULT_LOBBY_SECTION_ORDER.includes(id)))];
+}
+
+export const DEFAULT_VISIBLE_LOCALE_IDS = Object.freeze(Object.keys(LANGS));
+
+export function normalizeVisibleLocaleIds(value) {
+  const ids = Array.isArray(value) ? value : [];
+  const known = new Set(ids);
+  const normalized = DEFAULT_VISIBLE_LOCALE_IDS.filter((id) => known.has(id));
+  return normalized.length ? normalized : [...DEFAULT_VISIBLE_LOCALE_IDS];
+}
+
+export function readVisibleLocaleIds(storage = window.localStorage) {
+  try {
+    const saved = JSON.parse(storage.getItem(LOCALE_VISIBILITY_STORAGE_KEY));
+    return normalizeVisibleLocaleIds(saved);
+  } catch {
+    return [...DEFAULT_VISIBLE_LOCALE_IDS];
+  }
+}
+
+export function writeVisibleLocaleIds(ids, storage = window.localStorage) {
+  const normalized = normalizeVisibleLocaleIds(ids);
+  try {
+    storage.setItem(LOCALE_VISIBILITY_STORAGE_KEY, JSON.stringify(normalized));
+  } catch {
+    // Locale visibility still works for the current session when storage is unavailable.
+  }
+  return normalized;
 }
 
 export function normalizeVisibleSkinIds(value) {

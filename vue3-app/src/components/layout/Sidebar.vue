@@ -106,7 +106,7 @@
 
     <!-- 語言 + 存提款 -->
     <div class="sidebar-extra">
-      <div class="sb-lang-wrap" ref="langRef">
+      <div v-if="visibleLocaleIds.length > 1" class="sb-lang-wrap" ref="langRef">
         <button class="sb-lang" :class="{ open: langOpen }" @click="langOpen = !langOpen">
           <svg class="sb-lang-globe" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
             <circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18" />
@@ -153,7 +153,7 @@
         </button>
         <div v-if="langOpen" class="sb-lang-menu">
           <button
-            v-for="(v, k) in LANGS" :key="k"
+            v-for="(v, k) in visibleLangs" :key="k"
             class="sb-lang-item" :class="{ active: locale === k }"
             @click="setLocale(k); langOpen = false"
           >
@@ -225,6 +225,7 @@
 import { computed, reactive, ref, onMounted, onUnmounted } from 'vue';
 import Icon from '@/components/ui/Icon.vue';
 import { useLocale } from '@/composables/useLocale.js';
+import { LOCALE_VISIBILITY_STORAGE_KEY, readVisibleLocaleIds } from '@/design/siteFactory.js';
 
 const props = defineProps({
   collapsed:  { type: Boolean, default: false },
@@ -249,6 +250,15 @@ const sectionOpen = reactive({
 const langOpen = ref(false);
 const langRef  = ref(null);
 const { locale, languages: LANGS, setLocale, t } = useLocale();
+
+const visibleLocaleIds = ref(readVisibleLocaleIds());
+const visibleLangs = computed(() =>
+  Object.fromEntries(Object.entries(LANGS).filter(([k]) => visibleLocaleIds.value.includes(k)))
+);
+function syncVisibleLocales(event) {
+  if (event.key !== null && event.key !== LOCALE_VISIBILITY_STORAGE_KEY) return;
+  visibleLocaleIds.value = readVisibleLocaleIds();
+}
 
 const sections = computed(() => [
   {
@@ -330,6 +340,13 @@ function handleWithdraw() {
 function onDocClick(e) {
   if (langRef.value && !langRef.value.contains(e.target)) langOpen.value = false;
 }
-onMounted(()    => document.addEventListener('mousedown', onDocClick));
-onUnmounted(()  => document.removeEventListener('mousedown', onDocClick));
+onMounted(() => {
+  document.addEventListener('mousedown', onDocClick);
+  window.addEventListener('storage', syncVisibleLocales);
+  syncVisibleLocales({ key: null });
+});
+onUnmounted(() => {
+  document.removeEventListener('mousedown', onDocClick);
+  window.removeEventListener('storage', syncVisibleLocales);
+});
 </script>

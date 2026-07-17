@@ -345,6 +345,83 @@
 
 .studio-factory-heading { margin-bottom: 14px; }
 
+.studio-factory-group { margin-bottom: 10px; }
+.studio-factory-group:last-child { margin-bottom: 0; }
+
+.studio-factory-group-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 40px;
+  padding: 8px 9px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--bg-card);
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color var(--duration-fast), background var(--duration-fast);
+}
+
+.studio-factory-group-head:hover { border-color: var(--line-hi); }
+
+.studio-factory-group-head:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.studio-factory-group.open > .studio-factory-group-head {
+  border-color: var(--line-hi);
+  background: var(--bg-elev);
+}
+
+.studio-factory-group-title {
+  overflow: hidden;
+  color: var(--text);
+  font-size: var(--type-body-sm);
+  font-weight: var(--weight-bold);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.studio-factory-group-badge {
+  flex: 0 1 auto;
+  margin-left: auto;
+  overflow: hidden;
+  padding: 3px 7px;
+  border: 1px solid var(--line-hi);
+  border-radius: var(--radius-xs);
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  font-size: var(--type-caption);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.studio-factory-caret {
+  flex-shrink: 0;
+  color: var(--text-dim);
+  transition: transform var(--duration-fast);
+}
+
+.studio-factory-group.open .studio-factory-caret { transform: rotate(180deg); }
+
+.studio-factory-group-body { padding: 12px 2px 0; }
+
+.studio-factory-group-sub {
+  display: block;
+  margin-bottom: 9px;
+  color: var(--text-dim);
+  font-size: var(--type-caption);
+}
+
+.studio-factory-group-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 9px;
+}
+
 .studio-factory-field {
   display: grid;
   gap: 7px;
@@ -433,6 +510,17 @@
     var(--skin-surface);
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--skin-surface) 60%, transparent);
 }
+
+.studio-locale-flag {
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border-color: var(--line-hi);
+  background: var(--bg-elev);
+  box-shadow: none;
+}
+
+.studio-locale-flag svg { width: 100%; height: 100%; }
 
 .studio-skin-copy {
   display: flex;

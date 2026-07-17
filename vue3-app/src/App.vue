@@ -87,37 +87,12 @@
 
       <!-- Lobby tab -->
       <template v-if="catTab === 'Lobby'">
-        <div class="lobby-section-list" :class="{ 'is-reordering': draggedSectionId }">
+        <div class="lobby-section-list">
           <div
             v-for="sectionId in visibleLobbySectionOrder"
             :key="sectionId"
             class="lobby-sort-item"
-            :class="{
-              'is-dragging': draggedSectionId === sectionId,
-              'is-drag-over': dragOverSectionId === sectionId && draggedSectionId !== sectionId,
-            }"
-              :data-sort-id="sectionId"
-            >
-            <button
-              class="lobby-drag-handle"
-              type="button"
-              :aria-label="`${lobbySectionLabel(sectionId)} ${t('studio.dragToReorder')}`"
-              :title="`${t('studio.dragToReorder')} ${lobbySectionLabel(sectionId)}`"
-              @pointerdown="startSectionPointerDrag(sectionId, $event)"
-              @pointermove="moveSectionPointerDrag"
-              @pointerup="finishSectionPointerDrag"
-              @pointercancel="finishSectionPointerDrag"
-              @keydown.up.prevent="moveSectionBy(sectionId, -1)"
-              @keydown.down.prevent="moveSectionBy(sectionId, 1)"
-              @keydown.home.prevent="moveSectionBy(sectionId, -lobbySectionOrder.length)"
-              @keydown.end.prevent="moveSectionBy(sectionId, lobbySectionOrder.length)"
-            >
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
-                <circle cx="5" cy="3" r="1.25" /><circle cx="11" cy="3" r="1.25" />
-                <circle cx="5" cy="8" r="1.25" /><circle cx="11" cy="8" r="1.25" />
-                <circle cx="5" cy="13" r="1.25" /><circle cx="11" cy="13" r="1.25" />
-              </svg>
-            </button>
+          >
 
             <Rail
               v-if="sectionId === 'recently-played'"
@@ -296,10 +271,11 @@ import {
   readLobbyLayout,
   readVisibleSkinIds,
   SKIN_VISIBILITY_STORAGE_KEY,
-  writeLobbyLayout,
+  LOCALE_VISIBILITY_STORAGE_KEY,
+  readVisibleLocaleIds,
 } from '@/design/siteFactory.js';
 
-const { t } = useLocale();
+const { t, locale, setLocale } = useLocale();
 const { t: tweaks, setTweak, skins } = useTweaks();
 const visibleSkinIds = ref(readVisibleSkinIds());
 const visibleSkins = computed(() => skins.filter((s) => visibleSkinIds.value.includes(s.id)));
@@ -320,9 +296,6 @@ const promotionReturnScroll = ref(0);
 
 const lobbySectionOrder = ref([...DEFAULT_LOBBY_SECTION_ORDER]);
 const hiddenLobbySections = ref([]);
-const draggedSectionId = ref(null);
-const dragOverSectionId = ref(null);
-const touchDragPointerId = ref(null);
 
 // showPromos 從 tweaks 驅動
 const showPromos = computed(() => tweaks.showPromos);
@@ -366,14 +339,6 @@ function closePromotionDetail() {
   nextTick(() => window.scrollTo({ top: promotionReturnScroll.value, behavior: 'instant' }));
 }
 
-function saveLobbySectionOrder() {
-  try {
-    writeLobbyLayout({ order: lobbySectionOrder.value, hidden: hiddenLobbySections.value });
-  } catch {
-    // Storage can be unavailable in private browsing; ordering still works for this session.
-  }
-}
-
 function restoreLobbySectionOrder() {
   const layout = readLobbyLayout();
   lobbySectionOrder.value = layout.order;
@@ -385,6 +350,11 @@ function enforceVisibleSkinPolicy() {
   if (!visibleSkinIds.value.includes(tweaks.skin)) setTweak('skin', visibleSkinIds.value[0]);
 }
 
+function enforceVisibleLocalePolicy() {
+  const visibleLocaleIds = readVisibleLocaleIds();
+  if (!visibleLocaleIds.includes(locale.value)) setLocale(visibleLocaleIds[0]);
+}
+
 function syncSiteFactory(event) {
   if (event.key === null || [LOBBY_LAYOUT_STORAGE_KEY, LEGACY_LOBBY_ORDER_STORAGE_KEY].includes(event.key)) {
     restoreLobbySectionOrder();
@@ -392,61 +362,9 @@ function syncSiteFactory(event) {
   if (event.key === null || event.key === SKIN_VISIBILITY_STORAGE_KEY) {
     enforceVisibleSkinPolicy();
   }
-}
-
-function reorderSection(sourceId, targetId) {
-  if (!sourceId || !targetId || sourceId === targetId) return;
-  const next = [...lobbySectionOrder.value];
-  const sourceIndex = next.indexOf(sourceId);
-  const targetIndex = next.indexOf(targetId);
-  if (sourceIndex < 0 || targetIndex < 0) return;
-  next.splice(sourceIndex, 1);
-  next.splice(targetIndex, 0, sourceId);
-  lobbySectionOrder.value = next;
-  dragOverSectionId.value = targetId;
-}
-
-function moveSectionTo(targetId) {
-  reorderSection(draggedSectionId.value, targetId);
-}
-
-function finishSectionDrag() {
-  if (draggedSectionId.value) saveLobbySectionOrder();
-  draggedSectionId.value = null;
-  dragOverSectionId.value = null;
-  touchDragPointerId.value = null;
-}
-
-function startSectionPointerDrag(sectionId, event) {
-  draggedSectionId.value = sectionId;
-  touchDragPointerId.value = event.pointerId;
-  event.currentTarget.setPointerCapture(event.pointerId);
-}
-
-function moveSectionPointerDrag(event) {
-  if (touchDragPointerId.value !== event.pointerId || !draggedSectionId.value) return;
-  const edge = 72;
-  if (event.clientY < edge) window.scrollBy({ top: -18, behavior: 'auto' });
-  if (event.clientY > window.innerHeight - edge) window.scrollBy({ top: 18, behavior: 'auto' });
-  const target = document.elementFromPoint(event.clientX, event.clientY)?.closest('[data-sort-id]');
-  if (target?.dataset.sortId) moveSectionTo(target.dataset.sortId);
-}
-
-function finishSectionPointerDrag(event) {
-  if (touchDragPointerId.value !== null && touchDragPointerId.value !== event.pointerId) return;
-  finishSectionDrag();
-}
-
-function moveSectionBy(sectionId, delta) {
-  const currentIndex = lobbySectionOrder.value.indexOf(sectionId);
-  if (currentIndex < 0) return;
-  const targetIndex = Math.max(0, Math.min(lobbySectionOrder.value.length - 1, currentIndex + delta));
-  if (currentIndex === targetIndex) return;
-  const next = [...lobbySectionOrder.value];
-  next.splice(currentIndex, 1);
-  next.splice(targetIndex, 0, sectionId);
-  lobbySectionOrder.value = next;
-  saveLobbySectionOrder();
+  if (event.key === null || event.key === LOCALE_VISIBILITY_STORAGE_KEY) {
+    enforceVisibleLocalePolicy();
+  }
 }
 
 // 模擬餘額浮動

@@ -39,97 +39,214 @@
             </div>
           </div>
 
-          <label class="studio-factory-field">
-            <span>{{ t('studio.previewSkin') }}</span>
-            <select v-model="draftSkin" class="studio-select">
-              <option v-for="skin in skins" :key="skin.id" :value="skin.id">{{ skin.label }}</option>
-            </select>
-          </label>
-
-          <div class="studio-front-skin-control">
-            <div class="studio-composition-head">
-              <div>
-                <span>{{ t('studio.frontendSkins') }}</span>
-                <small>{{ t('studio.visibleSkinCount', '', { visible: draftVisibleSkinIds.length, total: skins.length }) }}</small>
-              </div>
-              <small>{{ t('studio.frontendSkinsSub') }}</small>
-            </div>
-
-            <div class="studio-skin-list" :aria-label="t('studio.frontendSkins')">
-              <label
-                v-for="skin in skins"
-                :key="skin.id"
-                class="studio-skin-item"
-                :class="{ active: isSkinVisible(skin.id), locked: isOnlyVisibleSkin(skin.id) }"
-              >
-                <input
-                  class="studio-skin-checkbox"
-                  type="checkbox"
-                  :checked="isSkinVisible(skin.id)"
-                  :disabled="isOnlyVisibleSkin(skin.id)"
-                  :aria-label="`${isSkinVisible(skin.id) ? t('studio.hide') : t('studio.show')} ${skin.label}`"
-                  @change="toggleVisibleSkin(skin.id)"
-                />
-                <span
-                  class="studio-skin-swatch"
-                  :style="{ '--skin-color': skin.swatch, '--skin-surface': skin.surface }"
-                  aria-hidden="true"
-                ></span>
-                <span class="studio-skin-copy">
-                  <strong>{{ skin.label }}</strong>
-                  <small>{{ skin.theme }}</small>
-                </span>
-                <span class="studio-skin-state">{{ isSkinVisible(skin.id) ? t('studio.show') : t('studio.hide') }}</span>
-                <span class="studio-visibility-toggle" :aria-checked="isSkinVisible(skin.id)" aria-hidden="true"><span /></span>
+          <div class="studio-factory-group" :class="{ open: factoryGroupOpen.previewSkin }">
+            <button
+              type="button"
+              class="studio-factory-group-head"
+              :aria-expanded="factoryGroupOpen.previewSkin"
+              aria-controls="studio-factory-panel-previewSkin"
+              :aria-label="`${factoryGroupOpen.previewSkin ? t('common.collapse') : t('common.expand')} ${t('studio.previewSkin')}`"
+              @click="toggleFactoryGroup('previewSkin')"
+            >
+              <span class="studio-factory-group-title">{{ t('studio.previewSkin') }}</span>
+              <span class="studio-factory-group-badge">{{ previewSkinLabel }}</span>
+              <svg class="studio-factory-caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+            </button>
+            <div v-show="factoryGroupOpen.previewSkin" id="studio-factory-panel-previewSkin" class="studio-factory-group-body">
+              <label class="studio-factory-field">
+                <span>{{ t('studio.previewSkin') }}</span>
+                <select v-model="draftSkin" class="studio-select">
+                  <option v-for="skin in skins" :key="skin.id" :value="skin.id">{{ skin.label }}</option>
+                </select>
               </label>
             </div>
           </div>
 
-          <div class="studio-composition-head">
-            <div>
-              <span>{{ t('studio.homeComposition') }}</span>
-              <small>{{ t('studio.visibleCount', '', { visible: visibleLayoutCount, total: layoutOrder.length }) }}</small>
+          <div class="studio-factory-group" :class="{ open: factoryGroupOpen.frontendSkins }">
+            <button
+              type="button"
+              class="studio-factory-group-head"
+              :aria-expanded="factoryGroupOpen.frontendSkins"
+              aria-controls="studio-factory-panel-frontendSkins"
+              :aria-label="`${factoryGroupOpen.frontendSkins ? t('common.collapse') : t('common.expand')} ${t('studio.frontendSkins')}`"
+              @click="toggleFactoryGroup('frontendSkins')"
+            >
+              <span class="studio-factory-group-title">{{ t('studio.frontendSkins') }}</span>
+              <span class="studio-factory-group-badge">{{ t('studio.visibleSkinCount', '', { visible: draftVisibleSkinIds.length, total: skins.length }) }}</span>
+              <svg class="studio-factory-caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+            </button>
+            <div v-show="factoryGroupOpen.frontendSkins" id="studio-factory-panel-frontendSkins" class="studio-factory-group-body">
+              <div class="studio-front-skin-control">
+                <small class="studio-factory-group-sub">{{ t('studio.frontendSkinsSub') }}</small>
+
+                <div class="studio-skin-list" :aria-label="t('studio.frontendSkins')">
+                  <label
+                    v-for="skin in skins"
+                    :key="skin.id"
+                    class="studio-skin-item"
+                    :class="{ active: isSkinVisible(skin.id), locked: isOnlyVisibleSkin(skin.id) }"
+                  >
+                    <input
+                      class="studio-skin-checkbox"
+                      type="checkbox"
+                      :checked="isSkinVisible(skin.id)"
+                      :disabled="isOnlyVisibleSkin(skin.id)"
+                      :aria-label="`${isSkinVisible(skin.id) ? t('studio.hide') : t('studio.show')} ${skin.label}`"
+                      @change="toggleVisibleSkin(skin.id)"
+                    />
+                    <span
+                      class="studio-skin-swatch"
+                      :style="{ '--skin-color': skin.swatch, '--skin-surface': skin.surface }"
+                      aria-hidden="true"
+                    ></span>
+                    <span class="studio-skin-copy">
+                      <strong>{{ skin.label }}</strong>
+                      <small>{{ skin.theme }}</small>
+                    </span>
+                    <span class="studio-skin-state">{{ isSkinVisible(skin.id) ? t('studio.show') : t('studio.hide') }}</span>
+                    <span class="studio-visibility-toggle" :aria-checked="isSkinVisible(skin.id)" aria-hidden="true"><span /></span>
+                  </label>
+                </div>
+              </div>
             </div>
-            <button class="studio-text-button" type="button" @click="restoreLayoutDefaults">{{ t('studio.resetLayout') }}</button>
           </div>
 
-          <ul class="studio-layout-list" :aria-label="t('studio.homeComposition')">
-            <li
-              v-for="(sectionId, index) in layoutOrder"
-              :key="sectionId"
-              class="studio-layout-item"
-              :class="{
-                'is-hidden': hiddenSections.includes(sectionId),
-                'is-drag-over': layoutOverId === sectionId && layoutDragId !== sectionId,
-              }"
-              draggable="true"
-              @dragstart="startLayoutDrag(sectionId)"
-              @dragover.prevent="layoutOverId = sectionId"
-              @drop.prevent="dropLayoutSection(sectionId)"
-              @dragend="finishLayoutDrag"
+          <div class="studio-factory-group" :class="{ open: factoryGroupOpen.homeComposition }">
+            <button
+              type="button"
+              class="studio-factory-group-head"
+              :aria-expanded="factoryGroupOpen.homeComposition"
+              aria-controls="studio-factory-panel-homeComposition"
+              :aria-label="`${factoryGroupOpen.homeComposition ? t('common.collapse') : t('common.expand')} ${t('studio.homeComposition')}`"
+              @click="toggleFactoryGroup('homeComposition')"
             >
-              <span class="studio-layout-grip" :title="t('studio.dragToReorder')" aria-hidden="true">
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
-                  <circle cx="4" cy="3" r="1" /><circle cx="10" cy="3" r="1" />
-                  <circle cx="4" cy="7" r="1" /><circle cx="10" cy="7" r="1" />
-                  <circle cx="4" cy="11" r="1" /><circle cx="10" cy="11" r="1" />
-                </svg>
-              </span>
-              <span class="studio-layout-name">{{ layoutLabel(sectionId) }}</span>
-              <button
-                class="studio-visibility-toggle"
-                type="button"
-                role="switch"
-                :aria-checked="!hiddenSections.includes(sectionId)"
-                :aria-label="`${hiddenSections.includes(sectionId) ? t('studio.show') : t('studio.hide')} ${layoutLabel(sectionId)}`"
-                @click="toggleLayoutSection(sectionId)"
-              ><span /></button>
-              <span class="studio-layout-move">
-                <button type="button" :disabled="index === 0" :aria-label="`${t('studio.moveUp')} ${layoutLabel(sectionId)}`" @click="moveLayoutSection(index, index - 1)">↑</button>
-                <button type="button" :disabled="index === layoutOrder.length - 1" :aria-label="`${t('studio.moveDown')} ${layoutLabel(sectionId)}`" @click="moveLayoutSection(index, index + 1)">↓</button>
-              </span>
-            </li>
-          </ul>
+              <span class="studio-factory-group-title">{{ t('studio.homeComposition') }}</span>
+              <span class="studio-factory-group-badge">{{ t('studio.visibleCount', '', { visible: visibleLayoutCount, total: layoutOrder.length }) }}</span>
+              <svg class="studio-factory-caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+            </button>
+            <div v-show="factoryGroupOpen.homeComposition" id="studio-factory-panel-homeComposition" class="studio-factory-group-body">
+              <div class="studio-factory-group-actions">
+                <button class="studio-text-button" type="button" @click="restoreLayoutDefaults">{{ t('studio.resetLayout') }}</button>
+              </div>
+
+              <ul class="studio-layout-list" :aria-label="t('studio.homeComposition')">
+                <li
+                  v-for="(sectionId, index) in layoutOrder"
+                  :key="sectionId"
+                  class="studio-layout-item"
+                  :class="{
+                    'is-hidden': hiddenSections.includes(sectionId),
+                    'is-drag-over': layoutOverId === sectionId && layoutDragId !== sectionId,
+                  }"
+                  draggable="true"
+                  @dragstart="startLayoutDrag(sectionId)"
+                  @dragover.prevent="layoutOverId = sectionId"
+                  @drop.prevent="dropLayoutSection(sectionId)"
+                  @dragend="finishLayoutDrag"
+                >
+                  <span class="studio-layout-grip" :title="t('studio.dragToReorder')" aria-hidden="true">
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
+                      <circle cx="4" cy="3" r="1" /><circle cx="10" cy="3" r="1" />
+                      <circle cx="4" cy="7" r="1" /><circle cx="10" cy="7" r="1" />
+                      <circle cx="4" cy="11" r="1" /><circle cx="10" cy="11" r="1" />
+                    </svg>
+                  </span>
+                  <span class="studio-layout-name">{{ layoutLabel(sectionId) }}</span>
+                  <button
+                    class="studio-visibility-toggle"
+                    type="button"
+                    role="switch"
+                    :aria-checked="!hiddenSections.includes(sectionId)"
+                    :aria-label="`${hiddenSections.includes(sectionId) ? t('studio.show') : t('studio.hide')} ${layoutLabel(sectionId)}`"
+                    @click="toggleLayoutSection(sectionId)"
+                  ><span /></button>
+                  <span class="studio-layout-move">
+                    <button type="button" :disabled="index === 0" :aria-label="`${t('studio.moveUp')} ${layoutLabel(sectionId)}`" @click="moveLayoutSection(index, index - 1)">↑</button>
+                    <button type="button" :disabled="index === layoutOrder.length - 1" :aria-label="`${t('studio.moveDown')} ${layoutLabel(sectionId)}`" @click="moveLayoutSection(index, index + 1)">↓</button>
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="studio-factory-group" :class="{ open: factoryGroupOpen.frontendLocales }">
+            <button
+              type="button"
+              class="studio-factory-group-head"
+              :aria-expanded="factoryGroupOpen.frontendLocales"
+              aria-controls="studio-factory-panel-frontendLocales"
+              :aria-label="`${factoryGroupOpen.frontendLocales ? t('common.collapse') : t('common.expand')} ${t('studio.frontendLocales')}`"
+              @click="toggleFactoryGroup('frontendLocales')"
+            >
+              <span class="studio-factory-group-title">{{ t('studio.frontendLocales') }}</span>
+              <span class="studio-factory-group-badge">{{ t('studio.visibleLocaleCount', '', { visible: visibleLocaleIds.length, total: localeIds.length }) }}</span>
+              <svg class="studio-factory-caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+            </button>
+            <div v-show="factoryGroupOpen.frontendLocales" id="studio-factory-panel-frontendLocales" class="studio-factory-group-body">
+              <div class="studio-front-skin-control">
+                <small class="studio-factory-group-sub">{{ t('studio.frontendLocalesSub') }}</small>
+
+                <div class="studio-skin-list" :aria-label="t('studio.frontendLocales')">
+                  <label
+                    v-for="id in localeIds"
+                    :key="id"
+                    class="studio-skin-item"
+                    :class="{ active: isLocaleVisible(id), locked: isOnlyVisibleLocale(id) }"
+                  >
+                    <input
+                      class="studio-skin-checkbox"
+                      type="checkbox"
+                      :checked="isLocaleVisible(id)"
+                      :disabled="isOnlyVisibleLocale(id)"
+                      :aria-label="`${isLocaleVisible(id) ? t('studio.hide') : t('studio.show')} ${languages[id].label}`"
+                      @change="toggleVisibleLocale(id)"
+                    />
+                    <span class="studio-skin-swatch studio-locale-flag" aria-hidden="true">
+                      <svg v-if="id === 'zh'" width="18" height="12" viewBox="0 0 30 20">
+                        <rect width="30" height="20" fill="#de2910" />
+                        <polygon points="5.000,2.000 5.674,4.073 7.853,4.073 6.090,5.354 6.763,7.427 5.000,6.146 3.237,7.427 3.910,5.354 2.147,4.073 4.326,4.073" fill="#ffde00" />
+                        <polygon points="9.143,2.514 9.620,1.966 9.246,1.343 9.914,1.628 10.391,1.080 10.328,1.803 10.996,2.088 10.288,2.251 10.224,2.975 9.851,2.352" fill="#ffde00" />
+                        <polygon points="11.010,4.141 11.662,3.821 11.560,3.102 12.065,3.624 12.718,3.304 12.378,3.946 12.884,4.467 12.168,4.343 11.829,4.985 11.726,4.266" fill="#ffde00" />
+                        <polygon points="11.038,6.725 11.765,6.699 11.964,6.001 12.213,6.683 12.939,6.657 12.367,7.105 12.616,7.787 12.014,7.382 11.442,7.830 11.641,7.131" fill="#ffde00" />
+                        <polygon points="9.219,8.375 9.899,8.632 10.353,8.064 10.319,8.790 10.999,9.046 10.298,9.239 10.265,9.964 9.865,9.357 9.165,9.550 9.618,8.982" fill="#ffde00" />
+                      </svg>
+                      <svg v-else-if="id === 'en'" width="18" height="12" viewBox="0 0 60 40">
+                        <rect width="60" height="40" fill="#012169" />
+                        <path d="M0 0 60 40M60 0 0 40" stroke="#fff" stroke-width="6" />
+                        <path d="M30 0v40M0 20h60" stroke="#fff" stroke-width="10" />
+                        <path d="M30 0v40M0 20h60" stroke="#C8102E" stroke-width="6" />
+                      </svg>
+                      <svg v-else-if="id === 'ko'" width="18" height="12" viewBox="0 0 60 40">
+                        <rect width="60" height="40" fill="#fff" />
+                        <circle cx="30" cy="20" r="8" fill="#cd2e3a" />
+                        <path d="M22 20a8 8 0 0 1 16 0 4 4 0 0 1-8 0 4 4 0 0 0-8 0Z" fill="#0047a0" />
+                        <g stroke="#000" stroke-width="1.4">
+                          <path d="M11 11l4 6M13 9l4 6M15 7l4 6" />
+                          <path d="M41 23l4 6M43 21l4 6M45 19l4 6" />
+                          <path d="M45 11l-4 6M47 13l-4 6M49 15l-4 6" />
+                          <path d="M11 29l4-6M13 31l4-6M15 33l4-6" />
+                        </g>
+                      </svg>
+                      <svg v-else-if="id === 'th'" width="18" height="12" viewBox="0 0 30 20">
+                        <rect width="30" height="20" fill="#fff" />
+                        <rect width="30" height="4" fill="#a51931" />
+                        <rect y="16" width="30" height="4" fill="#a51931" />
+                        <rect y="4" width="30" height="3.33" fill="#f4f5f8" />
+                        <rect y="12.67" width="30" height="3.33" fill="#f4f5f8" />
+                        <rect y="7.33" width="30" height="5.34" fill="#2d2a4a" />
+                      </svg>
+                    </span>
+                    <span class="studio-skin-copy">
+                      <strong>{{ languages[id].label }}</strong>
+                      <small>{{ id.toUpperCase() }}</small>
+                    </span>
+                    <span class="studio-skin-state">{{ isLocaleVisible(id) ? t('studio.show') : t('studio.hide') }}</span>
+                    <span class="studio-visibility-toggle" :aria-checked="isLocaleVisible(id)" aria-hidden="true"><span /></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
         </section>
 
         <div class="studio-panel-head">
@@ -419,8 +536,10 @@ import {
   normalizeVisibleSkinIds,
   readLobbyLayout,
   readVisibleSkinIds,
+  readVisibleLocaleIds,
   writeLobbyLayout,
   writeVisibleSkinIds,
+  writeVisibleLocaleIds,
 } from '@/design/siteFactory.js';
 
 const emit = defineEmits(['navigate']);
@@ -452,6 +571,14 @@ const selectedModuleId = ref(modules[0].id);
 const previewMode = ref('desktop');
 const notice = ref('');
 const importInput = ref(null);
+const localeIds = Object.keys(languages);
+const visibleLocaleIds = ref(readVisibleLocaleIds());
+const factoryGroupOpen = reactive({
+  previewSkin: true,
+  frontendSkins: false,
+  homeComposition: false,
+  frontendLocales: false,
+});
 
 const assets = reactive({
   game: `${import.meta.env.BASE_URL}assets/mock/game-04.webp`,
@@ -486,6 +613,7 @@ const selectedMediaSpec = computed(() => MEDIA_UPLOAD_SPECS[selectedModuleId.val
 const previewAttributes = computed(() => makeDesignAttributes(draft));
 const previewStyle = computed(() => makeDesignStyle(draft));
 const visibleLayoutCount = computed(() => layoutOrder.value.length - hiddenSections.value.length);
+const previewSkinLabel = computed(() => skins.find((skin) => skin.id === draftSkin.value)?.label || draftSkin.value);
 const dirty = computed(() =>
   JSON.stringify(draft) !== JSON.stringify(design.modules)
   || draftSkin.value !== appliedSkin.value
@@ -536,12 +664,32 @@ function isOnlyVisibleSkin(skinId) {
   return isSkinVisible(skinId) && draftVisibleSkinIds.value.length <= 1;
 }
 
+function toggleFactoryGroup(key) {
+  factoryGroupOpen[key] = !factoryGroupOpen[key];
+}
+
 function toggleVisibleSkin(skinId) {
   if (isOnlyVisibleSkin(skinId)) return;
   const next = isSkinVisible(skinId)
     ? draftVisibleSkinIds.value.filter((id) => id !== skinId)
     : [...draftVisibleSkinIds.value, skinId];
   draftVisibleSkinIds.value = normalizeVisibleSkinIds(next);
+}
+
+function isLocaleVisible(localeId) {
+  return visibleLocaleIds.value.includes(localeId);
+}
+
+function isOnlyVisibleLocale(localeId) {
+  return isLocaleVisible(localeId) && visibleLocaleIds.value.length <= 1;
+}
+
+function toggleVisibleLocale(localeId) {
+  if (isOnlyVisibleLocale(localeId)) return;
+  const next = isLocaleVisible(localeId)
+    ? visibleLocaleIds.value.filter((id) => id !== localeId)
+    : [...visibleLocaleIds.value, localeId];
+  visibleLocaleIds.value = writeVisibleLocaleIds(next);
 }
 
 function moduleIndex(id) {
