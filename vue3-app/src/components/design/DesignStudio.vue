@@ -46,6 +46,45 @@
             </select>
           </label>
 
+          <div class="studio-front-skin-control">
+            <div class="studio-composition-head">
+              <div>
+                <span>{{ t('studio.frontendSkins') }}</span>
+                <small>{{ t('studio.visibleSkinCount', '', { visible: draftVisibleSkinIds.length, total: skins.length }) }}</small>
+              </div>
+              <small>{{ t('studio.frontendSkinsSub') }}</small>
+            </div>
+
+            <div class="studio-skin-list" :aria-label="t('studio.frontendSkins')">
+              <label
+                v-for="skin in skins"
+                :key="skin.id"
+                class="studio-skin-item"
+                :class="{ active: isSkinVisible(skin.id), locked: isOnlyVisibleSkin(skin.id) }"
+              >
+                <input
+                  class="studio-skin-checkbox"
+                  type="checkbox"
+                  :checked="isSkinVisible(skin.id)"
+                  :disabled="isOnlyVisibleSkin(skin.id)"
+                  :aria-label="`${isSkinVisible(skin.id) ? t('studio.hide') : t('studio.show')} ${skin.label}`"
+                  @change="toggleVisibleSkin(skin.id)"
+                />
+                <span
+                  class="studio-skin-swatch"
+                  :style="{ '--skin-color': skin.swatch, '--skin-surface': skin.surface }"
+                  aria-hidden="true"
+                ></span>
+                <span class="studio-skin-copy">
+                  <strong>{{ skin.label }}</strong>
+                  <small>{{ skin.theme }}</small>
+                </span>
+                <span class="studio-skin-state">{{ isSkinVisible(skin.id) ? t('studio.show') : t('studio.hide') }}</span>
+                <span class="studio-visibility-toggle" :aria-checked="isSkinVisible(skin.id)" aria-hidden="true"><span /></span>
+              </label>
+            </div>
+          </div>
+
           <div class="studio-composition-head">
             <div>
               <span>{{ t('studio.homeComposition') }}</span>
@@ -377,8 +416,11 @@ import {
   LOBBY_SECTION_LABELS,
   normalizeHiddenSections,
   normalizeLobbyOrder,
+  normalizeVisibleSkinIds,
   readLobbyLayout,
+  readVisibleSkinIds,
   writeLobbyLayout,
+  writeVisibleSkinIds,
 } from '@/design/siteFactory.js';
 
 const emit = defineEmits(['navigate']);
@@ -396,9 +438,12 @@ const { t: tweaks, setTweak, skins } = useTweaks();
 
 const draft = reactive(normalizeDesignModules(design.modules));
 const initialLayout = readLobbyLayout();
+const initialVisibleSkinIds = readVisibleSkinIds();
 const appliedLayout = ref(initialLayout);
 const appliedSkin = ref(tweaks.skin);
+const appliedVisibleSkinIds = ref([...initialVisibleSkinIds]);
 const draftSkin = ref(tweaks.skin);
+const draftVisibleSkinIds = ref([...initialVisibleSkinIds]);
 const layoutOrder = ref([...initialLayout.order]);
 const hiddenSections = ref([...initialLayout.hidden]);
 const layoutDragId = ref(null);
@@ -444,6 +489,7 @@ const visibleLayoutCount = computed(() => layoutOrder.value.length - hiddenSecti
 const dirty = computed(() =>
   JSON.stringify(draft) !== JSON.stringify(design.modules)
   || draftSkin.value !== appliedSkin.value
+  || !sameVisibleSkinIds(draftVisibleSkinIds.value, appliedVisibleSkinIds.value)
   || JSON.stringify({ order: layoutOrder.value, hidden: hiddenSections.value }) !== JSON.stringify(appliedLayout.value)
 );
 
@@ -476,6 +522,26 @@ function variantText(variant, field) {
 
 function layoutLabel(sectionId) {
   return t(['lobby', 'sections', sectionId], LOBBY_SECTION_LABELS[sectionId] || sectionId);
+}
+
+function sameVisibleSkinIds(a, b) {
+  return JSON.stringify(normalizeVisibleSkinIds(a)) === JSON.stringify(normalizeVisibleSkinIds(b));
+}
+
+function isSkinVisible(skinId) {
+  return draftVisibleSkinIds.value.includes(skinId);
+}
+
+function isOnlyVisibleSkin(skinId) {
+  return isSkinVisible(skinId) && draftVisibleSkinIds.value.length <= 1;
+}
+
+function toggleVisibleSkin(skinId) {
+  if (isOnlyVisibleSkin(skinId)) return;
+  const next = isSkinVisible(skinId)
+    ? draftVisibleSkinIds.value.filter((id) => id !== skinId)
+    : [...draftVisibleSkinIds.value, skinId];
+  draftVisibleSkinIds.value = normalizeVisibleSkinIds(next);
 }
 
 function moduleIndex(id) {
@@ -564,9 +630,13 @@ function restoreLayoutDefaults() {
 
 function applyDraft() {
   applyConfig({ modules: draft });
-  setTweak('skin', draftSkin.value);
+  const savedVisibleSkinIds = writeVisibleSkinIds(draftVisibleSkinIds.value);
+  const nextSkin = savedVisibleSkinIds.includes(draftSkin.value) ? draftSkin.value : savedVisibleSkinIds[0];
+  setTweak('skin', nextSkin);
   const savedLayout = writeLobbyLayout({ order: layoutOrder.value, hidden: hiddenSections.value });
-  appliedSkin.value = draftSkin.value;
+  draftSkin.value = nextSkin;
+  appliedSkin.value = nextSkin;
+  appliedVisibleSkinIds.value = [...savedVisibleSkinIds];
   appliedLayout.value = savedLayout;
   showNotice(t('studio.noticeApplied'));
 }
@@ -574,6 +644,7 @@ function applyDraft() {
 function resetDraft() {
   replaceDraft(design.modules);
   draftSkin.value = appliedSkin.value;
+  draftVisibleSkinIds.value = [...appliedVisibleSkinIds.value];
   layoutOrder.value = [...appliedLayout.value.order];
   hiddenSections.value = [...appliedLayout.value.hidden];
   showNotice(t('studio.noticeReset'));
@@ -591,6 +662,7 @@ function exportConfig() {
     version: design.version,
     exportedAt: new Date().toISOString(),
     skin: draftSkin.value,
+    visibleSkins: normalizeVisibleSkinIds(draftVisibleSkinIds.value),
     layout: {
       order: normalizeLobbyOrder(layoutOrder.value),
       hidden: normalizeHiddenSections(hiddenSections.value),
@@ -614,6 +686,7 @@ async function importConfig(event) {
     const payload = JSON.parse(await file.text());
     replaceDraft(payload.modules || payload);
     if (skins.some((skin) => skin.id === payload.skin)) draftSkin.value = payload.skin;
+    if (payload.visibleSkins) draftVisibleSkinIds.value = normalizeVisibleSkinIds(payload.visibleSkins);
     if (payload.layout) {
       layoutOrder.value = normalizeLobbyOrder(payload.layout.order);
       hiddenSections.value = normalizeHiddenSections(payload.layout.hidden);

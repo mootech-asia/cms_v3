@@ -21,13 +21,10 @@
       <TopBar
         :user="user"
         :balance="balance"
-        :skin="tweaks.skin"
-        :skins="skins"
         @sign-in="showSignIn = true"
         @logout="user = null"
         @home="goHome"
         @navigate="(cat) => activeCat = cat"
-        @change-skin="setTweak('skin', $event)"
       />
     </template>
 
@@ -294,11 +291,13 @@ import {
   LOBBY_SECTION_LABELS,
   LEGACY_LOBBY_ORDER_STORAGE_KEY,
   readLobbyLayout,
+  readVisibleSkinIds,
+  SKIN_VISIBILITY_STORAGE_KEY,
   writeLobbyLayout,
 } from '@/design/siteFactory.js';
 
 const { t } = useLocale();
-const { t: tweaks, setTweak, skins } = useTweaks();
+const { t: tweaks, setTweak } = useTweaks();
 useDesignStudio();
 
 const openGame          = ref(null);
@@ -376,9 +375,18 @@ function restoreLobbySectionOrder() {
   hiddenLobbySections.value = layout.hidden;
 }
 
-function syncLobbyLayout(event) {
-  if (![LOBBY_LAYOUT_STORAGE_KEY, LEGACY_LOBBY_ORDER_STORAGE_KEY].includes(event.key)) return;
-  restoreLobbySectionOrder();
+function enforceVisibleSkinPolicy() {
+  const visibleSkinIds = readVisibleSkinIds();
+  if (!visibleSkinIds.includes(tweaks.skin)) setTweak('skin', visibleSkinIds[0]);
+}
+
+function syncSiteFactory(event) {
+  if (event.key === null || [LOBBY_LAYOUT_STORAGE_KEY, LEGACY_LOBBY_ORDER_STORAGE_KEY].includes(event.key)) {
+    restoreLobbySectionOrder();
+  }
+  if (event.key === null || event.key === SKIN_VISIBILITY_STORAGE_KEY) {
+    enforceVisibleSkinPolicy();
+  }
 }
 
 function reorderSection(sourceId, targetId) {
@@ -440,11 +448,12 @@ function moveSectionBy(sectionId, delta) {
 let balanceTimer;
 onMounted(() => {
   restoreLobbySectionOrder();
-  window.addEventListener('storage', syncLobbyLayout);
+  enforceVisibleSkinPolicy();
+  window.addEventListener('storage', syncSiteFactory);
   balanceTimer = setInterval(() => { balance.value = +(balance.value + (Math.random() * 4 - 1.7)).toFixed(2); }, 5500);
 });
 onUnmounted(() => {
   clearInterval(balanceTimer);
-  window.removeEventListener('storage', syncLobbyLayout);
+  window.removeEventListener('storage', syncSiteFactory);
 });
 </script>

@@ -15,47 +15,6 @@
 
       <!-- 右側操作區 -->
       <div class="header-actions">
-
-        <!-- Skin selector -->
-        <div class="tb-skin-wrap" ref="skinRef">
-          <button
-            class="tb-icon-btn tb-skin-trigger"
-            :aria-label="t('topbar.chooseSkin')"
-            :title="t('topbar.chooseSkin')"
-            aria-haspopup="listbox"
-            :aria-expanded="skinMenuOpen"
-            @click="skinMenuOpen = !skinMenuOpen; menuOpen = false"
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="m12 3 8 5-8 5-8-5 8-5Z" />
-              <path d="m5.5 12 6.5 4 6.5-4" />
-              <path d="m7.5 17 4.5 2.8 4.5-2.8" />
-            </svg>
-          </button>
-
-          <div v-if="skinMenuOpen" class="tb-skin-menu" role="listbox" aria-label="Skin">
-            <button
-              v-for="option in skins"
-              :key="option.id"
-              class="tb-skin-option"
-              :class="{ active: skin === option.id }"
-              role="option"
-              :aria-selected="skin === option.id"
-              @click="selectSkin(option.id)"
-            >
-              <span
-                class="tb-skin-swatch"
-                :style="{ '--skin-color': option.swatch, '--skin-surface': option.surface }"
-                aria-hidden="true"
-              ></span>
-              <span class="tb-skin-label">{{ option.label }}</span>
-              <svg v-if="skin === option.id" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="m5 12 4 4 10-10" />
-              </svg>
-            </button>
-          </div>
-        </div>
-
         <!-- 已登入 -->
         <template v-if="user">
           <div class="tb-balance">
@@ -73,7 +32,7 @@
 
           <!-- 用戶頭像 + 下拉選單 -->
           <div class="tb-user-wrap" ref="menuRef">
-            <button class="tb-user-circle" :aria-label="t('topbar.account')" @click="menuOpen = !menuOpen; skinMenuOpen = false">
+            <button class="tb-user-circle" :aria-label="t('topbar.account')" @click="menuOpen = !menuOpen">
               <span class="tb-avatar circle">{{ initials }}</span>
               <span class="tb-tier-badge" aria-hidden="true">
                 <svg width="10" height="11" viewBox="0 0 12 14" fill="currentColor">
@@ -150,17 +109,13 @@ import { useLocale } from '@/composables/useLocale.js';
 const props = defineProps({
   user:    { type: Object, default: null },
   balance: { type: Number, default: 0   },
-  skin:    { type: String, default: 'blue' },
-  skins:   { type: Array, default: () => [] },
 });
 
-const emit = defineEmits(['sign-in', 'logout', 'home', 'navigate', 'change-skin']);
+const emit = defineEmits(['sign-in', 'logout', 'home', 'navigate']);
 
 const scrolled     = ref(false);
 const menuOpen     = ref(false);
 const menuRef      = ref(null);
-const skinMenuOpen = ref(false);
-const skinRef      = ref(null);
 const { t } = useLocale();
 
 const initials = computed(() => props.user ? props.user.name.slice(0, 2).toUpperCase() : '');
@@ -175,17 +130,12 @@ const menuItems = computed(() => [
   { name: t(['nav', 'Banking Details'], 'Banking Details'),             icon: 'card',   go: 'WithdrawalForm'  },
 ]);
 
-function selectSkin(id) {
-  emit('change-skin', id);
-  skinMenuOpen.value = false;
-}
 function navigate(cat) { emit('navigate', cat); menuOpen.value = false; }
 function doLogout()    { emit('logout');         menuOpen.value = false; }
 
 function onScroll() { scrolled.value = window.scrollY > 8; }
 function onDocClick(e) {
   if (menuRef.value && !menuRef.value.contains(e.target)) menuOpen.value = false;
-  if (skinRef.value && !skinRef.value.contains(e.target)) skinMenuOpen.value = false;
 }
 
 onMounted(() => {
