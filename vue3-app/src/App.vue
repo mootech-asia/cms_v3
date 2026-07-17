@@ -80,7 +80,7 @@
 
     <!-- 首頁區塊 -->
     <template v-else-if="activeCat === 'Lobby'">
-      <Hero v-if="!isSupportView" />
+      <Hero v-if="!isSupportView" :banners="heroBanners" />
       <PromoRibbon v-if="showPromos && !isSupportView" />
       <RewardsBanner v-if="user && !isSupportView" :user="user" />
       <Promos v-if="showPromos && !isSupportView" v-model:active="catTab" />
@@ -225,6 +225,8 @@
     @close="showSignIn = false"
     @login="user = $event"
   />
+
+  <div v-if="isPreviewMode" class="studio-preview-badge">{{ t('studio.previewModeBadge') }}</div>
 </template>
 
 <script setup>
@@ -265,13 +267,17 @@ import { useLocale }          from '@/composables/useLocale.js';
 import { GAMES, RECENTLY_PLAYED } from '@/data/index.js';
 import {
   DEFAULT_LOBBY_SECTION_ORDER,
+  HERO_BANNERS_STORAGE_KEY,
   LOBBY_LAYOUT_STORAGE_KEY,
   LOBBY_SECTION_LABELS,
   LEGACY_LOBBY_ORDER_STORAGE_KEY,
+  isStudioPreviewMode,
+  readHeroBanners,
   readLobbyLayout,
   readVisibleSkinIds,
   SKIN_VISIBILITY_STORAGE_KEY,
   LOCALE_VISIBILITY_STORAGE_KEY,
+  STUDIO_DRAFT_STORAGE_KEY,
   readVisibleLocaleIds,
 } from '@/design/siteFactory.js';
 
@@ -279,6 +285,8 @@ const { t, locale, setLocale } = useLocale();
 const { t: tweaks, setTweak, skins } = useTweaks();
 const visibleSkinIds = ref(readVisibleSkinIds());
 const visibleSkins = computed(() => skins.filter((s) => visibleSkinIds.value.includes(s.id)));
+const heroBanners = ref(readHeroBanners());
+const isPreviewMode = isStudioPreviewMode();
 useDesignStudio();
 
 const openGame          = ref(null);
@@ -345,6 +353,10 @@ function restoreLobbySectionOrder() {
   hiddenLobbySections.value = layout.hidden;
 }
 
+function restoreHeroBanners() {
+  heroBanners.value = readHeroBanners();
+}
+
 function enforceVisibleSkinPolicy() {
   visibleSkinIds.value = readVisibleSkinIds();
   if (!visibleSkinIds.value.includes(tweaks.skin)) setTweak('skin', visibleSkinIds.value[0]);
@@ -356,14 +368,21 @@ function enforceVisibleLocalePolicy() {
 }
 
 function syncSiteFactory(event) {
-  if (event.key === null || [LOBBY_LAYOUT_STORAGE_KEY, LEGACY_LOBBY_ORDER_STORAGE_KEY].includes(event.key)) {
+  // The studio draft bundles layout + visible skins + visible locales together,
+  // so any draft update must re-run all three reads (preview mode reads all of
+  // them from the draft key instead of their individual persisted keys).
+  const draftChanged = event.key === STUDIO_DRAFT_STORAGE_KEY;
+  if (event.key === null || draftChanged || [LOBBY_LAYOUT_STORAGE_KEY, LEGACY_LOBBY_ORDER_STORAGE_KEY].includes(event.key)) {
     restoreLobbySectionOrder();
   }
-  if (event.key === null || event.key === SKIN_VISIBILITY_STORAGE_KEY) {
+  if (event.key === null || draftChanged || event.key === SKIN_VISIBILITY_STORAGE_KEY) {
     enforceVisibleSkinPolicy();
   }
-  if (event.key === null || event.key === LOCALE_VISIBILITY_STORAGE_KEY) {
+  if (event.key === null || draftChanged || event.key === LOCALE_VISIBILITY_STORAGE_KEY) {
     enforceVisibleLocalePolicy();
+  }
+  if (event.key === null || draftChanged || event.key === HERO_BANNERS_STORAGE_KEY) {
+    restoreHeroBanners();
   }
 }
 
@@ -372,6 +391,7 @@ let balanceTimer;
 onMounted(() => {
   restoreLobbySectionOrder();
   enforceVisibleSkinPolicy();
+  restoreHeroBanners();
   window.addEventListener('storage', syncSiteFactory);
   balanceTimer = setInterval(() => { balance.value = +(balance.value + (Math.random() * 4 - 1.7)).toFixed(2); }, 5500);
 });

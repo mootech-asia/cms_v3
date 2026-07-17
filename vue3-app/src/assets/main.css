@@ -5309,49 +5309,6 @@ select.twk-field {
 .lobby-sort-item > section.lobby-section {
   margin-top: 0;
 }
-.lobby-sort-item .section-title-group {
-  padding-left: 40px;
-}
-.lobby-drag-handle {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 5;
-  width: 32px;
-  height: 32px;
-  padding: 0;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: var(--bg-card);
-  color: var(--text-dim);
-  display: grid;
-  place-items: center;
-  cursor: grab;
-  touch-action: none;
-  transition: color var(--duration-fast), border-color var(--duration-fast), background var(--duration-fast);
-}
-.lobby-drag-handle:hover,
-.lobby-drag-handle:focus-visible {
-  color: var(--text);
-  border-color: var(--line-hi);
-  background: var(--bg-card-hi);
-  outline: none;
-}
-.lobby-drag-handle:active { cursor: grabbing; }
-.lobby-sort-item.is-dragging {
-  opacity: 0.58;
-}
-.lobby-sort-item.is-drag-over::before {
-  content: '';
-  position: absolute;
-  top: -12px;
-  right: 0;
-  left: 0;
-  height: 2px;
-  border-radius: 2px;
-  background: var(--accent);
-}
-
 /* Category pills reserve room for their focus ring inside the scroll area. */
 .cv-tabs {
   flex-wrap: nowrap;
@@ -5421,8 +5378,6 @@ select.twk-field {
 }
 
 @media (max-width: 900px) {
-  .lobby-sort-item .section-title-group { padding-left: 44px; }
-  .lobby-drag-handle { width: 36px; height: 36px; }
   .gcard-fav { width: 30px; height: 30px; }
 }
 

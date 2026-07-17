@@ -51,15 +51,103 @@
             >
               <span class="studio-factory-group-title">{{ t('studio.previewSkin') }}</span>
               <span class="studio-factory-group-badge">{{ previewSkinLabel }}</span>
-              <svg class="studio-factory-caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+              <Icon name="chevD" class="studio-factory-caret" aria-hidden="true" />
             </button>
             <div v-show="factoryGroupOpen.previewSkin" id="studio-factory-panel-previewSkin" class="studio-factory-group-body">
               <label class="studio-factory-field">
                 <span>{{ t('studio.previewSkin') }}</span>
-                <select v-model="draftSkin" class="studio-select">
-                  <option v-for="skin in skins" :key="skin.id" :value="skin.id">{{ skin.label }}</option>
-                </select>
+                <div class="studio-skin-picker" ref="skinPickerRef">
+                  <button
+                    type="button"
+                    ref="skinTriggerRef"
+                    class="studio-skin-picker-trigger"
+                    aria-haspopup="listbox"
+                    :aria-expanded="skinMenuOpen"
+                    @click="toggleSkinMenu"
+                  >
+                    <span
+                      class="studio-skin-swatch"
+                      :style="{ '--skin-color': activeSkinOption?.swatch, '--skin-surface': activeSkinOption?.surface }"
+                      aria-hidden="true"
+                    ></span>
+                    <span class="studio-skin-picker-label">{{ previewSkinLabel }}</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+                  </button>
+                  <div
+                    v-if="skinMenuOpen"
+                    class="studio-skin-picker-menu"
+                    role="listbox"
+                    :aria-label="t('studio.previewSkin')"
+                    @keydown="onSkinMenuKeydown"
+                  >
+                    <button
+                      v-for="(skin, index) in skins"
+                      :key="skin.id"
+                      type="button"
+                      :ref="(el) => (skinOptionRefs[index] = el)"
+                      class="studio-skin-picker-option"
+                      role="option"
+                      :aria-selected="draftSkin === skin.id"
+                      @click="selectDraftSkin(skin.id)"
+                    >
+                      <span
+                        class="studio-skin-swatch"
+                        :style="{ '--skin-color': skin.swatch, '--skin-surface': skin.surface }"
+                        aria-hidden="true"
+                      ></span>
+                      <span class="studio-skin-picker-option-label">{{ skin.label }}</span>
+                      <svg v-if="draftSkin === skin.id" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4 10-10" /></svg>
+                    </button>
+                  </div>
+                </div>
               </label>
+            </div>
+          </div>
+
+          <div class="studio-factory-group" :class="{ open: factoryGroupOpen.frontendLocales }">
+            <button
+              type="button"
+              class="studio-factory-group-head"
+              :aria-expanded="factoryGroupOpen.frontendLocales"
+              aria-controls="studio-factory-panel-frontendLocales"
+              :aria-label="`${factoryGroupOpen.frontendLocales ? t('common.collapse') : t('common.expand')} ${t('studio.frontendLocales')}`"
+              @click="toggleFactoryGroup('frontendLocales')"
+            >
+              <span class="studio-factory-group-title">{{ t('studio.frontendLocales') }}</span>
+              <span class="studio-factory-group-badge">{{ t('studio.visibleLocaleCount', '', { visible: visibleLocaleIds.length, total: localeIds.length }) }}</span>
+              <Icon name="chevD" class="studio-factory-caret" aria-hidden="true" />
+            </button>
+            <div v-show="factoryGroupOpen.frontendLocales" id="studio-factory-panel-frontendLocales" class="studio-factory-group-body">
+              <div class="studio-front-skin-control">
+                <small class="studio-factory-group-sub">{{ t('studio.frontendLocalesSub') }}</small>
+
+                <div class="studio-skin-list" :aria-label="t('studio.frontendLocales')">
+                  <label
+                    v-for="id in localeIds"
+                    :key="id"
+                    class="studio-skin-item"
+                    :class="{ active: isLocaleVisible(id), locked: isOnlyVisibleLocale(id) }"
+                  >
+                    <input
+                      class="studio-skin-checkbox"
+                      type="checkbox"
+                      :checked="isLocaleVisible(id)"
+                      :disabled="isOnlyVisibleLocale(id)"
+                      :aria-label="`${isLocaleVisible(id) ? t('studio.hide') : t('studio.show')} ${languages[id].label}`"
+                      @change="toggleVisibleLocale(id)"
+                    />
+                    <span class="studio-skin-swatch studio-locale-flag" aria-hidden="true">
+                      <LocaleFlag :code="id" />
+                    </span>
+                    <span class="studio-skin-copy">
+                      <strong>{{ languages[id].label }}</strong>
+                      <small>{{ id.toUpperCase() }}</small>
+                    </span>
+                    <span class="studio-skin-state">{{ isLocaleVisible(id) ? t('studio.show') : t('studio.hide') }}</span>
+                    <span class="studio-visibility-toggle" :aria-checked="isLocaleVisible(id)" aria-hidden="true"><span /></span>
+                  </label>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -74,7 +162,7 @@
             >
               <span class="studio-factory-group-title">{{ t('studio.frontendSkins') }}</span>
               <span class="studio-factory-group-badge">{{ t('studio.visibleSkinCount', '', { visible: draftVisibleSkinIds.length, total: skins.length }) }}</span>
-              <svg class="studio-factory-caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+              <Icon name="chevD" class="studio-factory-caret" aria-hidden="true" />
             </button>
             <div v-show="factoryGroupOpen.frontendSkins" id="studio-factory-panel-frontendSkins" class="studio-factory-group-body">
               <div class="studio-front-skin-control">
@@ -123,7 +211,7 @@
             >
               <span class="studio-factory-group-title">{{ t('studio.homeComposition') }}</span>
               <span class="studio-factory-group-badge">{{ t('studio.visibleCount', '', { visible: visibleLayoutCount, total: layoutOrder.length }) }}</span>
-              <svg class="studio-factory-caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+              <Icon name="chevD" class="studio-factory-caret" aria-hidden="true" />
             </button>
             <div v-show="factoryGroupOpen.homeComposition" id="studio-factory-panel-homeComposition" class="studio-factory-group-body">
               <div class="studio-factory-group-actions">
@@ -169,85 +257,6 @@
               </ul>
             </div>
           </div>
-
-          <div class="studio-factory-group" :class="{ open: factoryGroupOpen.frontendLocales }">
-            <button
-              type="button"
-              class="studio-factory-group-head"
-              :aria-expanded="factoryGroupOpen.frontendLocales"
-              aria-controls="studio-factory-panel-frontendLocales"
-              :aria-label="`${factoryGroupOpen.frontendLocales ? t('common.collapse') : t('common.expand')} ${t('studio.frontendLocales')}`"
-              @click="toggleFactoryGroup('frontendLocales')"
-            >
-              <span class="studio-factory-group-title">{{ t('studio.frontendLocales') }}</span>
-              <span class="studio-factory-group-badge">{{ t('studio.visibleLocaleCount', '', { visible: visibleLocaleIds.length, total: localeIds.length }) }}</span>
-              <svg class="studio-factory-caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
-            </button>
-            <div v-show="factoryGroupOpen.frontendLocales" id="studio-factory-panel-frontendLocales" class="studio-factory-group-body">
-              <div class="studio-front-skin-control">
-                <small class="studio-factory-group-sub">{{ t('studio.frontendLocalesSub') }}</small>
-
-                <div class="studio-skin-list" :aria-label="t('studio.frontendLocales')">
-                  <label
-                    v-for="id in localeIds"
-                    :key="id"
-                    class="studio-skin-item"
-                    :class="{ active: isLocaleVisible(id), locked: isOnlyVisibleLocale(id) }"
-                  >
-                    <input
-                      class="studio-skin-checkbox"
-                      type="checkbox"
-                      :checked="isLocaleVisible(id)"
-                      :disabled="isOnlyVisibleLocale(id)"
-                      :aria-label="`${isLocaleVisible(id) ? t('studio.hide') : t('studio.show')} ${languages[id].label}`"
-                      @change="toggleVisibleLocale(id)"
-                    />
-                    <span class="studio-skin-swatch studio-locale-flag" aria-hidden="true">
-                      <svg v-if="id === 'zh'" width="18" height="12" viewBox="0 0 30 20">
-                        <rect width="30" height="20" fill="#de2910" />
-                        <polygon points="5.000,2.000 5.674,4.073 7.853,4.073 6.090,5.354 6.763,7.427 5.000,6.146 3.237,7.427 3.910,5.354 2.147,4.073 4.326,4.073" fill="#ffde00" />
-                        <polygon points="9.143,2.514 9.620,1.966 9.246,1.343 9.914,1.628 10.391,1.080 10.328,1.803 10.996,2.088 10.288,2.251 10.224,2.975 9.851,2.352" fill="#ffde00" />
-                        <polygon points="11.010,4.141 11.662,3.821 11.560,3.102 12.065,3.624 12.718,3.304 12.378,3.946 12.884,4.467 12.168,4.343 11.829,4.985 11.726,4.266" fill="#ffde00" />
-                        <polygon points="11.038,6.725 11.765,6.699 11.964,6.001 12.213,6.683 12.939,6.657 12.367,7.105 12.616,7.787 12.014,7.382 11.442,7.830 11.641,7.131" fill="#ffde00" />
-                        <polygon points="9.219,8.375 9.899,8.632 10.353,8.064 10.319,8.790 10.999,9.046 10.298,9.239 10.265,9.964 9.865,9.357 9.165,9.550 9.618,8.982" fill="#ffde00" />
-                      </svg>
-                      <svg v-else-if="id === 'en'" width="18" height="12" viewBox="0 0 60 40">
-                        <rect width="60" height="40" fill="#012169" />
-                        <path d="M0 0 60 40M60 0 0 40" stroke="#fff" stroke-width="6" />
-                        <path d="M30 0v40M0 20h60" stroke="#fff" stroke-width="10" />
-                        <path d="M30 0v40M0 20h60" stroke="#C8102E" stroke-width="6" />
-                      </svg>
-                      <svg v-else-if="id === 'ko'" width="18" height="12" viewBox="0 0 60 40">
-                        <rect width="60" height="40" fill="#fff" />
-                        <circle cx="30" cy="20" r="8" fill="#cd2e3a" />
-                        <path d="M22 20a8 8 0 0 1 16 0 4 4 0 0 1-8 0 4 4 0 0 0-8 0Z" fill="#0047a0" />
-                        <g stroke="#000" stroke-width="1.4">
-                          <path d="M11 11l4 6M13 9l4 6M15 7l4 6" />
-                          <path d="M41 23l4 6M43 21l4 6M45 19l4 6" />
-                          <path d="M45 11l-4 6M47 13l-4 6M49 15l-4 6" />
-                          <path d="M11 29l4-6M13 31l4-6M15 33l4-6" />
-                        </g>
-                      </svg>
-                      <svg v-else-if="id === 'th'" width="18" height="12" viewBox="0 0 30 20">
-                        <rect width="30" height="20" fill="#fff" />
-                        <rect width="30" height="4" fill="#a51931" />
-                        <rect y="16" width="30" height="4" fill="#a51931" />
-                        <rect y="4" width="30" height="3.33" fill="#f4f5f8" />
-                        <rect y="12.67" width="30" height="3.33" fill="#f4f5f8" />
-                        <rect y="7.33" width="30" height="5.34" fill="#2d2a4a" />
-                      </svg>
-                    </span>
-                    <span class="studio-skin-copy">
-                      <strong>{{ languages[id].label }}</strong>
-                      <small>{{ id.toUpperCase() }}</small>
-                    </span>
-                    <span class="studio-skin-state">{{ isLocaleVisible(id) ? t('studio.show') : t('studio.hide') }}</span>
-                    <span class="studio-visibility-toggle" :aria-checked="isLocaleVisible(id)" aria-hidden="true"><span /></span>
-                  </label>
-                </div>
-              </div>
-            </div>
-          </div>
         </section>
 
         <div class="studio-panel-head">
@@ -288,7 +297,7 @@
         </div>
 
         <MediaUploadField
-          v-if="selectedMediaSpec"
+          v-if="selectedMediaSpec && selectedModuleId !== 'banner'"
           :key="selectedModuleId"
           :spec="selectedMediaSpec"
           @change="replacePreviewAsset"
@@ -302,20 +311,55 @@
             </div>
             <small>{{ t('studio.selectArtwork') }}</small>
           </header>
+
+          <div class="studio-banner-add">
+            <button type="button" class="studio-button quiet" @click="openBannerFilePicker()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 16V4" /><path d="m7 9 5-5 5 5" /><path d="M4 15v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4" />
+              </svg>
+              {{ t('studio.upload.addBanner') }}
+            </button>
+            <input
+              type="text"
+              class="studio-banner-url-input"
+              :placeholder="t('studio.upload.pasteUrl')"
+              @keydown.enter.prevent="addBannerFromUrl($event.target)"
+            />
+          </div>
+          <input ref="bannerFileInput" class="studio-file-input" type="file" accept="image/*" @change="handleBannerFile" />
+
           <div class="studio-banner-list">
-            <button
-              v-for="banner in bannerLibrary"
-              :key="banner.id"
-              type="button"
-              class="studio-banner-item"
-              :class="{ active: assets.hero === banner.image }"
-              @click="selectBanner(banner)"
-            >
+            <div v-for="banner in bannerLibrary" :key="banner.id" class="studio-banner-item">
               <span class="studio-banner-thumb">
                 <img :src="banner.image" :alt="banner.label" :style="{ objectPosition: banner.position }" />
               </span>
               <strong>{{ banner.label }}</strong>
-            </button>
+              <div class="studio-banner-actions">
+                <button type="button" class="studio-icon-button" :aria-label="t('studio.upload.replace')" :title="t('studio.upload.replace')" @click="openBannerFilePicker(banner.id)">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M12 16V4" /><path d="m7 9 5-5 5 5" /><path d="M4 15v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4" />
+                  </svg>
+                </button>
+                <button
+                  type="button"
+                  class="studio-icon-button studio-icon-button-danger"
+                  :aria-label="t('studio.upload.removeBanner')"
+                  :title="t('studio.upload.removeBanner')"
+                  :disabled="bannerLibrary.length <= 1"
+                  @click="deleteBanner(banner.id)"
+                >
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M18 6 6 18M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              <input
+                type="text"
+                class="studio-banner-url-input"
+                :placeholder="t('studio.upload.pasteUrl')"
+                @keydown.enter.prevent="applyBannerUrl(banner.id, $event.target)"
+              />
+            </div>
           </div>
         </section>
 
@@ -345,27 +389,36 @@
 </template>
 
 <script setup>
-import { computed, onBeforeUnmount, reactive, ref, watch } from 'vue';
+import { computed, nextTick, onBeforeUnmount, reactive, ref, watch } from 'vue';
+import Icon from '@/components/ui/Icon.vue';
+import LocaleFlag from '@/components/ui/LocaleFlag.vue';
 import MediaUploadField from '@/components/design/MediaUploadField.vue';
-import { HERO_SLIDES } from '@/data/index.js';
 import { DEFAULT_DESIGN_MODULES } from '@/design/registry.js';
 import { MEDIA_UPLOAD_SPECS } from '@/design/mediaSpecs.js';
 import { useDesignStudio } from '@/composables/useDesignStudio.js';
 import { useLocale } from '@/composables/useLocale.js';
 import { useTweaks } from '@/composables/useTweaks.js';
+import { useClickOutside } from '@/composables/useClickOutside.js';
 import {
   DEFAULT_LOBBY_SECTION_ORDER,
   LOBBY_SECTION_LABELS,
+  normalizeHeroBanners,
   normalizeHiddenSections,
   normalizeLobbyOrder,
+  normalizeVisibleLocaleIds,
   normalizeVisibleSkinIds,
+  readHeroBanners,
   readLobbyLayout,
   readVisibleSkinIds,
   readVisibleLocaleIds,
+  writeHeroBanners,
   writeLobbyLayout,
   writeVisibleSkinIds,
   writeVisibleLocaleIds,
+  writeStudioDraft,
 } from '@/design/siteFactory.js';
+
+const MAX_BANNER_UPLOAD_BYTES = 300 * 1024;
 
 const emit = defineEmits(['navigate', 'studio-change']);
 const {
@@ -399,27 +452,28 @@ const localeIds = Object.keys(languages);
 const visibleLocaleIds = ref(readVisibleLocaleIds());
 const factoryGroupOpen = reactive({
   previewSkin: true,
+  frontendLocales: false,
   frontendSkins: false,
   homeComposition: false,
-  frontendLocales: false,
 });
+
+const skinMenuOpen = ref(false);
+const skinPickerRef = ref(null);
+const skinTriggerRef = ref(null);
+const skinOptionRefs = ref([]);
+const activeSkinOption = computed(() => skins.find((option) => option.id === draftSkin.value));
 
 const assets = reactive({
   game: `${import.meta.env.BASE_URL}assets/mock/game-04.webp`,
   promo: `${import.meta.env.BASE_URL}assets/mock/promo-4-v2.jpg`,
-  hero: `${import.meta.env.BASE_URL}assets/mock/hero-1.webp`,
-  heroPosition: HERO_SLIDES[0].position || 'center',
-  heroMobilePosition: HERO_SLIDES[0].mobilePosition || HERO_SLIDES[0].position || 'center',
   avatar: '',
   logo: `${import.meta.env.BASE_URL}assets/logo.png`,
 });
-const bannerLibrary = ref(HERO_SLIDES.map((slide, index) => ({
-  id: `default-${index + 1}`,
-  label: slide.title.replace('\n', ' '),
-  image: slide.image,
-  position: slide.position || 'center',
-  mobilePosition: slide.mobilePosition || slide.position || 'center',
-})));
+const initialBanners = readHeroBanners();
+const bannerLibrary = ref(initialBanners);
+const appliedBanners = ref([...initialBanners]);
+const bannerFileInput = ref(null);
+const pendingBannerId = ref(null);
 const objectUrls = new Set();
 
 const moduleGroups = computed(() => {
@@ -441,6 +495,7 @@ const dirty = computed(() =>
   || draftSkin.value !== appliedSkin.value
   || !sameVisibleSkinIds(draftVisibleSkinIds.value, appliedVisibleSkinIds.value)
   || JSON.stringify({ order: layoutOrder.value, hidden: hiddenSections.value }) !== JSON.stringify(appliedLayout.value)
+  || JSON.stringify(bannerLibrary.value) !== JSON.stringify(appliedBanners.value)
 );
 
 watch(draftSkin, (skinId) => {
@@ -449,6 +504,76 @@ watch(draftSkin, (skinId) => {
   document.documentElement.setAttribute('data-skin', skin.id);
   document.documentElement.setAttribute('data-theme', skin.theme);
 }, { immediate: true });
+
+// Broadcast the live draft to the preview iframe via localStorage so it can
+// reflect every control change instantly, without needing "Apply".
+let draftBroadcastTimer = null;
+watch(
+  () => ({
+    modules: { ...draft },
+    skin: draftSkin.value,
+    visibleSkinIds: normalizeVisibleSkinIds(draftVisibleSkinIds.value),
+    layout: {
+      order: normalizeLobbyOrder(layoutOrder.value),
+      hidden: normalizeHiddenSections(hiddenSections.value),
+    },
+    visibleLocaleIds: normalizeVisibleLocaleIds(visibleLocaleIds.value),
+    banners: normalizeHeroBanners(bannerLibrary.value),
+  }),
+  (snapshot) => {
+    if (draftBroadcastTimer) window.clearTimeout(draftBroadcastTimer);
+    draftBroadcastTimer = window.setTimeout(() => {
+      writeStudioDraft(snapshot);
+      draftBroadcastTimer = null;
+    }, 150);
+  },
+  { deep: true, immediate: true }
+);
+
+async function toggleSkinMenu() {
+  skinMenuOpen.value = !skinMenuOpen.value;
+  if (skinMenuOpen.value) {
+    await nextTick();
+    const activeIndex = skins.findIndex((option) => option.id === draftSkin.value);
+    (skinOptionRefs.value[activeIndex] || skinOptionRefs.value[0])?.focus();
+  }
+}
+
+function closeSkinMenu() {
+  skinMenuOpen.value = false;
+  skinTriggerRef.value?.focus();
+}
+
+function selectDraftSkin(id) {
+  draftSkin.value = id;
+  skinMenuOpen.value = false;
+  skinTriggerRef.value?.focus();
+}
+
+function onSkinMenuKeydown(event) {
+  const options = skinOptionRefs.value.filter(Boolean);
+  if (!options.length) return;
+  const currentIndex = options.indexOf(document.activeElement);
+
+  if (event.key === 'ArrowDown') {
+    event.preventDefault();
+    options[(currentIndex + 1 + options.length) % options.length]?.focus();
+  } else if (event.key === 'ArrowUp') {
+    event.preventDefault();
+    options[(currentIndex - 1 + options.length) % options.length]?.focus();
+  } else if (event.key === 'Home') {
+    event.preventDefault();
+    options[0]?.focus();
+  } else if (event.key === 'End') {
+    event.preventDefault();
+    options[options.length - 1]?.focus();
+  } else if (event.key === 'Escape') {
+    event.preventDefault();
+    closeSkinMenu();
+  }
+}
+
+useClickOutside(skinPickerRef, () => { skinMenuOpen.value = false; });
 
 function changeStudioLocale(value) {
   setLocale(value);
@@ -531,21 +656,7 @@ function replaceDraft(value) {
 function replacePreviewAsset(payload) {
   const spec = selectedMediaSpec.value;
   if (!spec) return;
-  const { file, url } = payload;
-
-  if (spec.assetKey === 'hero') {
-    const banner = {
-      id: `upload-${Date.now()}`,
-      label: file.name.replace(/\.[^.]+$/, ''),
-      image: url,
-      position: 'center',
-      mobilePosition: 'center',
-    };
-    bannerLibrary.value.push(banner);
-    objectUrls.add(url);
-    selectBanner(banner);
-    return;
-  }
+  const { url } = payload;
 
   const previous = assets[spec.assetKey];
   if (previous?.startsWith('blob:')) {
@@ -556,10 +667,76 @@ function replacePreviewAsset(payload) {
   objectUrls.add(url);
 }
 
-function selectBanner(banner) {
-  assets.hero = banner.image;
-  assets.heroPosition = banner.position;
-  assets.heroMobilePosition = banner.mobilePosition;
+function readFileAsDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(file);
+  });
+}
+
+function openBannerFilePicker(bannerId = null) {
+  pendingBannerId.value = bannerId;
+  bannerFileInput.value?.click();
+}
+
+async function handleBannerFile(event) {
+  const [file] = event.target.files || [];
+  event.target.value = '';
+  if (!file) return;
+
+  if (file.size > MAX_BANNER_UPLOAD_BYTES) {
+    showNotice(t('studio.upload.tooLarge'));
+    pendingBannerId.value = null;
+    return;
+  }
+
+  try {
+    const dataUrl = await readFileAsDataUrl(file);
+    if (pendingBannerId.value) {
+      replaceBannerImage(pendingBannerId.value, dataUrl);
+    } else {
+      addBanner(dataUrl, file.name.replace(/\.[^.]+$/, ''));
+    }
+  } finally {
+    pendingBannerId.value = null;
+  }
+}
+
+function replaceBannerImage(bannerId, image) {
+  bannerLibrary.value = bannerLibrary.value.map((banner) => (
+    banner.id === bannerId ? { ...banner, image } : banner
+  ));
+}
+
+function applyBannerUrl(bannerId, inputEl) {
+  const value = inputEl?.value?.trim();
+  if (!value) return;
+  replaceBannerImage(bannerId, value);
+  inputEl.value = '';
+}
+
+function addBanner(image, label) {
+  bannerLibrary.value = [...bannerLibrary.value, {
+    id: `banner-${Date.now()}`,
+    label: label || t('studio.bannerSet'),
+    image,
+    position: 'center',
+    mobilePosition: 'center',
+  }];
+}
+
+function addBannerFromUrl(inputEl) {
+  const value = inputEl?.value?.trim();
+  if (!value) return;
+  addBanner(value, '');
+  inputEl.value = '';
+}
+
+function deleteBanner(bannerId) {
+  if (bannerLibrary.value.length <= 1) return;
+  bannerLibrary.value = bannerLibrary.value.filter((banner) => banner.id !== bannerId);
 }
 
 function showNotice(message) {
@@ -609,10 +786,12 @@ function applyDraft() {
   const nextSkin = savedVisibleSkinIds.includes(draftSkin.value) ? draftSkin.value : savedVisibleSkinIds[0];
   setTweak('skin', nextSkin);
   const savedLayout = writeLobbyLayout({ order: layoutOrder.value, hidden: hiddenSections.value });
+  const savedBanners = writeHeroBanners(bannerLibrary.value);
   draftSkin.value = nextSkin;
   appliedSkin.value = nextSkin;
   appliedVisibleSkinIds.value = [...savedVisibleSkinIds];
   appliedLayout.value = savedLayout;
+  appliedBanners.value = savedBanners;
   showNotice(t('studio.noticeApplied'));
   emit('studio-change');
 }
@@ -623,6 +802,7 @@ function resetDraft() {
   draftVisibleSkinIds.value = [...appliedVisibleSkinIds.value];
   layoutOrder.value = [...appliedLayout.value.order];
   hiddenSections.value = [...appliedLayout.value.hidden];
+  bannerLibrary.value = [...appliedBanners.value];
   showNotice(t('studio.noticeReset'));
 }
 
@@ -643,6 +823,7 @@ function exportConfig() {
       order: normalizeLobbyOrder(layoutOrder.value),
       hidden: normalizeHiddenSections(hiddenSections.value),
     },
+    banners: normalizeHeroBanners(bannerLibrary.value),
     modules: normalizeDesignModules(draft),
   }, null, 2);
   const blob = new Blob([payload], { type: 'application/json' });
@@ -667,6 +848,7 @@ async function importConfig(event) {
       layoutOrder.value = normalizeLobbyOrder(payload.layout.order);
       hiddenSections.value = normalizeHiddenSections(payload.layout.hidden);
     }
+    if (payload.banners) bannerLibrary.value = normalizeHeroBanners(payload.banners);
     showNotice(t('studio.noticeImported'));
   } catch {
     showNotice(t('studio.noticeImportFailed'));
@@ -676,6 +858,7 @@ async function importConfig(event) {
 }
 
 onBeforeUnmount(() => {
+  if (draftBroadcastTimer) window.clearTimeout(draftBroadcastTimer);
   objectUrls.forEach((url) => URL.revokeObjectURL(url));
   const skin = skins.find((option) => option.id === appliedSkin.value) || skins[0];
   if (skin) {

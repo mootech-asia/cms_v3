@@ -36,7 +36,7 @@
 }
 :is(:root, [data-design-preview])[data-ui-promotion-card]:not([data-ui-promotion-card="v1"]) .promo-card::before { display: none; }
 
-:is(:root, [data-design-preview])[data-ui-banner]:not([data-ui-banner="v1"]) :is(.hero, .studio-sample-banner) {
+:is(:root, [data-design-preview])[data-ui-banner]:not([data-ui-banner="v1"]) .hero {
   border: var(--ui-banner-border);
   border-radius: var(--ui-banner-radius);
   box-shadow: var(--ui-banner-shadow-stack);
@@ -109,7 +109,7 @@
 }
 
 :is(:root, [data-design-preview])[data-ui-form]:not([data-ui-form="v1"]) :is(
-  .ap-input, .rec-date, .rec-status-btn, .dp-input, .wd-input, .studio-sample-form input, .studio-sample-form select
+  .ap-input, .rec-date, .rec-status-btn, .dp-input, .wd-input
 ) {
   border: var(--ui-form-border);
   border-radius: var(--ui-form-radius);
@@ -119,7 +119,7 @@
   backdrop-filter: var(--ui-form-backdrop);
 }
 :is(:root, [data-design-preview])[data-ui-form]:not([data-ui-form="v1"]) :is(
-  .ap-input, .rec-date, .rec-status-btn, .dp-input, .wd-input, .studio-sample-form input, .studio-sample-form select
+  .ap-input, .rec-date, .rec-status-btn, .dp-input, .wd-input
 ):focus-within {
   border-color: var(--accent);
 }
@@ -137,7 +137,7 @@
   font-weight: var(--ui-tag-weight);
 }
 
-:is(:root, [data-design-preview])[data-ui-table]:not([data-ui-table="v1"]) :is(.rec-table-scroll, .leaderboard, .studio-sample-table) {
+:is(:root, [data-design-preview])[data-ui-table]:not([data-ui-table="v1"]) :is(.rec-table-scroll, .leaderboard) {
   border: var(--ui-table-border);
   border-radius: var(--ui-table-radius);
   background: var(--ui-table-surface);
@@ -153,7 +153,7 @@
   background: color-mix(in oklch, var(--accent) 6%, transparent);
 }
 
-:is(:root, [data-design-preview])[data-ui-profile]:not([data-ui-profile="v1"]) :is(.ap-hero, .rewards-banner, .studio-sample-profile) {
+:is(:root, [data-design-preview])[data-ui-profile]:not([data-ui-profile="v1"]) :is(.ap-hero, .rewards-banner) {
   gap: var(--ui-profile-gap);
   padding: var(--ui-profile-space);
   border: var(--ui-profile-border);
@@ -165,7 +165,7 @@
 }
 
 :is(:root, [data-design-preview])[data-ui-panel]:not([data-ui-panel="v1"]) :is(
-  .ap-panel, .ap-form-card, .ap-tx-panel, .leaderboard, .studio-sample-panel
+  .ap-panel, .ap-form-card, .ap-tx-panel, .leaderboard
 ) {
   gap: var(--ui-panel-gap);
   padding: var(--ui-panel-space);
@@ -199,7 +199,7 @@
 }
 
 :is(:root, [data-design-preview])[data-ui-section-title]:not([data-ui-section-title="v1"]) :is(
-  .ap-h1, .section-title, .ap-section-h, .studio-title-sample h1
+  .ap-h1, .section-title, .ap-section-h
 ) {
   padding: calc(var(--ui-section-title-space) / 2) var(--ui-section-title-space);
   border: var(--ui-section-title-border);
@@ -224,23 +224,22 @@
 
 :is(:root, [data-design-preview])[data-ui-game-card]:not([data-ui-game-card="v1"]) .gcard { --ui-motif: var(--ui-game-card-motif, ""); --ui-motif-size: var(--ui-game-card-motifSize, 42px); --ui-motif-opacity: var(--ui-game-card-motifOpacity, .12); }
 :is(:root, [data-design-preview])[data-ui-promotion-card]:not([data-ui-promotion-card="v1"]) .promo-card { --ui-motif: var(--ui-promotion-card-motif, ""); --ui-motif-size: var(--ui-promotion-card-motifSize, 42px); --ui-motif-opacity: var(--ui-promotion-card-motifOpacity, .12); }
-:is(:root, [data-design-preview])[data-ui-banner]:not([data-ui-banner="v1"]) :is(.hero, .studio-sample-banner) { --ui-motif: var(--ui-banner-motif, ""); --ui-motif-size: var(--ui-banner-motifSize, 56px); --ui-motif-opacity: var(--ui-banner-motifOpacity, .10); }
+:is(:root, [data-design-preview])[data-ui-banner]:not([data-ui-banner="v1"]) .hero { --ui-motif: var(--ui-banner-motif, ""); --ui-motif-size: var(--ui-banner-motifSize, 56px); --ui-motif-opacity: var(--ui-banner-motifOpacity, .10); }
 :is(:root, [data-design-preview])[data-ui-ticker]:not([data-ui-ticker="v1"]) :is(.promo-ribbon, .providers-marquee) { --ui-motif: var(--ui-ticker-motif, ""); --ui-motif-size: var(--ui-ticker-motifSize, 32px); --ui-motif-opacity: var(--ui-ticker-motifOpacity, .10); }
 :is(:root, [data-design-preview])[data-ui-button]:not([data-ui-button="v1"]) :is(.ui-button, .btn, .ap-btn, .ap-btn-wide, .rec-confirm, .cv-view-all, .promo-card-cta, .sb-deposit, .sb-withdraw) { --ui-motif: var(--ui-button-motif, ""); --ui-motif-size: var(--ui-button-motifSize, 28px); --ui-motif-opacity: var(--ui-button-motifOpacity, .10); }
 :is(:root, [data-design-preview])[data-ui-tabs]:not([data-ui-tabs="v1"]) :is(.cat-tab, .ui-tab, .ui-tab--underline, .filter, .tab, .dp-method-tabs button, .wd-method-tabs button, .ap-amount-btn) { --ui-motif: var(--ui-tabs-motif, ""); --ui-motif-size: var(--ui-tabs-motifSize, 28px); --ui-motif-opacity: var(--ui-tabs-motifOpacity, .10); }
 :is(:root, [data-design-preview])[data-ui-tag]:not([data-ui-tag="v1"]) :is(.gcard-tag, .promo-card-tag, .rec-pill, .ap-pill, .ap-status, .count, .tb-tier-badge, .dp-provider-code, .ap-tag-new) { --ui-motif: var(--ui-tag-motif, ""); --ui-motif-size: var(--ui-tag-motifSize, 18px); --ui-motif-opacity: var(--ui-tag-motifOpacity, .14); }
-:is(:root, [data-design-preview])[data-ui-table]:not([data-ui-table="v1"]) :is(.rec-table-scroll, .leaderboard, .studio-sample-table) { --ui-motif: var(--ui-table-motif, ""); --ui-motif-size: var(--ui-table-motifSize, 48px); --ui-motif-opacity: var(--ui-table-motifOpacity, .09); }
-:is(:root, [data-design-preview])[data-ui-profile]:not([data-ui-profile="v1"]) :is(.ap-hero, .rewards-banner, .studio-sample-profile) { --ui-motif: var(--ui-profile-motif, ""); --ui-motif-size: var(--ui-profile-motifSize, 48px); --ui-motif-opacity: var(--ui-profile-motifOpacity, .10); }
-:is(:root, [data-design-preview])[data-ui-panel]:not([data-ui-panel="v1"]) :is(.ap-panel, .ap-form-card, .ap-tx-panel, .leaderboard, .studio-sample-panel) { --ui-motif: var(--ui-panel-motif, ""); --ui-motif-size: var(--ui-panel-motifSize, 52px); --ui-motif-opacity: var(--ui-panel-motifOpacity, .10); }
+:is(:root, [data-design-preview])[data-ui-table]:not([data-ui-table="v1"]) :is(.rec-table-scroll, .leaderboard) { --ui-motif: var(--ui-table-motif, ""); --ui-motif-size: var(--ui-table-motifSize, 48px); --ui-motif-opacity: var(--ui-table-motifOpacity, .09); }
+:is(:root, [data-design-preview])[data-ui-profile]:not([data-ui-profile="v1"]) :is(.ap-hero, .rewards-banner) { --ui-motif: var(--ui-profile-motif, ""); --ui-motif-size: var(--ui-profile-motifSize, 48px); --ui-motif-opacity: var(--ui-profile-motifOpacity, .10); }
+:is(:root, [data-design-preview])[data-ui-panel]:not([data-ui-panel="v1"]) :is(.ap-panel, .ap-form-card, .ap-tx-panel, .leaderboard) { --ui-motif: var(--ui-panel-motif, ""); --ui-motif-size: var(--ui-panel-motifSize, 52px); --ui-motif-opacity: var(--ui-panel-motifOpacity, .10); }
 :is(:root, [data-design-preview])[data-ui-navigation]:not([data-ui-navigation="v1"]) .sb-item { --ui-motif: var(--ui-navigation-motif, ""); --ui-motif-size: var(--ui-navigation-motifSize, 26px); --ui-motif-opacity: var(--ui-navigation-motifOpacity, .10); }
-:is(:root, [data-design-preview])[data-ui-section-title]:not([data-ui-section-title="v1"]) :is(.ap-h1, .section-title, .ap-section-h, .studio-title-sample h1) { --ui-motif: var(--ui-section-title-motif, ""); --ui-motif-size: var(--ui-section-title-motifSize, 40px); --ui-motif-opacity: var(--ui-section-title-motifOpacity, .09); }
+:is(:root, [data-design-preview])[data-ui-section-title]:not([data-ui-section-title="v1"]) :is(.ap-h1, .section-title, .ap-section-h) { --ui-motif: var(--ui-section-title-motif, ""); --ui-motif-size: var(--ui-section-title-motifSize, 40px); --ui-motif-opacity: var(--ui-section-title-motifOpacity, .09); }
 :is(:root, [data-design-preview])[data-ui-modal]:not([data-ui-modal="v1"]) .modal { --ui-motif: var(--ui-modal-motif, ""); --ui-motif-size: var(--ui-modal-motifSize, 56px); --ui-motif-opacity: var(--ui-modal-motifOpacity, .09); }
 
 :is(:root, [data-design-preview]) :is(
   .gcard,
   .promo-card,
   .hero,
-  .studio-sample-banner,
   .promo-ribbon,
   .providers-marquee,
   .ui-button,
@@ -265,7 +264,6 @@
   .count,
   .rec-table-scroll,
   .leaderboard,
-  .studio-sample-table,
   .ap-hero,
   .rewards-banner,
   .ap-panel,
@@ -285,7 +283,6 @@
   .gcard,
   .promo-card,
   .hero,
-  .studio-sample-banner,
   .promo-ribbon,
   .providers-marquee,
   .ui-button,
@@ -310,7 +307,6 @@
   .count,
   .rec-table-scroll,
   .leaderboard,
-  .studio-sample-table,
   .ap-hero,
   .rewards-banner,
   .ap-panel,
@@ -351,7 +347,7 @@
 }
 
 :is(:root, [data-design-preview])[data-ui-game-card="v3"] .gcard::before,
-:is(:root, [data-design-preview])[data-ui-panel="v3"] :is(.ap-panel, .studio-sample-panel)::before {
+:is(:root, [data-design-preview])[data-ui-panel="v3"] .ap-panel::before {
   content: '';
   position: absolute;
   right: 16px;
@@ -375,8 +371,8 @@
   pointer-events: none;
 }
 
-:is(:root, [data-design-preview])[data-ui-banner="v6"] :is(.hero, .studio-sample-banner)::before,
-:is(:root, [data-design-preview])[data-ui-profile="v6"] :is(.ap-hero, .rewards-banner, .studio-sample-profile)::before {
+:is(:root, [data-design-preview])[data-ui-banner="v6"] .hero::before,
+:is(:root, [data-design-preview])[data-ui-profile="v6"] :is(.ap-hero, .rewards-banner)::before {
   content: '';
   position: absolute;
   inset: 0;
@@ -387,8 +383,8 @@
   pointer-events: none;
 }
 
-:is(:root, [data-design-preview])[data-ui-table="v9"] :is(.rec-table-scroll, .leaderboard, .studio-sample-table)::before,
-:is(:root, [data-design-preview])[data-ui-panel="v9"] :is(.ap-panel, .studio-sample-panel)::before {
+:is(:root, [data-design-preview])[data-ui-table="v9"] :is(.rec-table-scroll, .leaderboard)::before,
+:is(:root, [data-design-preview])[data-ui-panel="v9"] .ap-panel::before {
   content: 'NO. CMS-100';
   position: absolute;
   top: 10px;

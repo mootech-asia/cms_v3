@@ -9,6 +9,11 @@ import {
   makeDesignStyle,
   normalizeDesignModules,
 } from '@/design/registry.js';
+import {
+  isStudioPreviewMode,
+  readStudioDraft,
+  STUDIO_DRAFT_STORAGE_KEY,
+} from '@/design/siteFactory.js';
 
 const state = reactive({
   version: DESIGN_SCHEMA_VERSION,
@@ -29,6 +34,18 @@ function readSavedConfig() {
   }
 }
 
+// In studio live-preview mode, draft module variants take priority over the
+// applied config; when the draft has no modules yet, fall back to the real
+// applied config so the preview matches the live site until edits happen.
+function resolveActiveConfig() {
+  if (isStudioPreviewMode()) {
+    const draft = readStudioDraft();
+    if (draft?.modules) return { modules: draft.modules, updatedAt: draft.updatedAt || null };
+  }
+  const saved = readSavedConfig();
+  return { modules: saved?.modules, updatedAt: saved?.updatedAt || null };
+}
+
 function writeRootConfig(modules) {
   const root = document.documentElement;
   const attributes = makeDesignAttributes(modules);
@@ -39,6 +56,7 @@ function writeRootConfig(modules) {
 }
 
 function persist() {
+  if (isStudioPreviewMode()) return;
   try {
     localStorage.setItem(DESIGN_STORAGE_KEY, JSON.stringify({
       version: DESIGN_SCHEMA_VERSION,
@@ -61,13 +79,26 @@ function resetConfig() {
   applyConfig({ modules: DEFAULT_DESIGN_MODULES });
 }
 
+// Studio writes the live draft to STUDIO_DRAFT_STORAGE_KEY on every change;
+// as a different browsing context (the preview iframe), this window receives
+// a native `storage` event and re-applies without ever persisting itself.
+function handlePreviewStorage(event) {
+  if (event.key !== null && event.key !== STUDIO_DRAFT_STORAGE_KEY) return;
+  const config = resolveActiveConfig();
+  applyConfig({ modules: config.modules }, { save: false });
+  state.updatedAt = config.updatedAt;
+}
+
 function initialize() {
   if (initialized || typeof document === 'undefined') return;
   initialized = true;
-  const saved = readSavedConfig();
-  state.modules = normalizeDesignModules(saved?.modules);
-  state.updatedAt = saved?.updatedAt || null;
+  const config = resolveActiveConfig();
+  state.modules = normalizeDesignModules(config.modules);
+  state.updatedAt = config.updatedAt;
   writeRootConfig(state.modules);
+  if (isStudioPreviewMode()) {
+    window.addEventListener('storage', handlePreviewStorage);
+  }
 }
 
 export function useDesignStudio() {
