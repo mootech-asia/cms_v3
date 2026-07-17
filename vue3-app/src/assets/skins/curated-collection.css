@@ -226,7 +226,7 @@
   --skin-calendar-filter: invert(26%) sepia(10%) saturate(525%) hue-rotate(104deg) brightness(0.84);
   --skin-calendar-hover-filter: invert(34%) sepia(25%) saturate(680%) hue-rotate(103deg) brightness(0.82);
   --accent: #9ab7ac;
-  --accent-2: #bfd1c9;
+  --accent-2: #4f695f;
   --accent-3: #9a7844;
   --accent-ink: #26332e;
   --accent-shade: #f4f5ef;
@@ -237,7 +237,8 @@
   --positive: #267a57;
   --negative: #bd3f4b;
   --warning: #987034;
-  --tier-next: #966122;
+  --balance-text: #705022;
+  --tier-next: #7c4b16;
   --skin-shadow: rgba(43, 62, 55, 0.10);
   --skin-inset: rgba(255, 255, 255, 0.45);
 }

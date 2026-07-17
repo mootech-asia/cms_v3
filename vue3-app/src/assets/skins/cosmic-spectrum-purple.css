@@ -15,7 +15,7 @@
   --text: #f4f2ff;
   --text-mid: rgba(224, 220, 255, 0.72);
   --text-dim: rgba(207, 201, 255, 0.46);
-  --text-on-accent: #ffffff;
+  --text-on-accent: #0d0828;
   --text-on-accent-soft: #f4f2ff;
   --icon-muted: rgba(215, 209, 255, 0.74);
   --cal-icon: var(--icon-muted);
@@ -25,7 +25,7 @@
 
   /* Brand and status */
   --accent: #6a48ff;
-  --accent-2: #8f7cff;
+  --accent-2: #b7acff;
   --accent-3: #b6a8ff;
   --accent-ink: #0d0828;
   --accent-shade: #000000;

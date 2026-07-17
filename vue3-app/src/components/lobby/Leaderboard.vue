@@ -33,9 +33,11 @@
         >
           <span class="lb-rank" :class="{ top: i < 3 }">{{ String(i + 1).padStart(2, '0') }}</span>
           <div class="lb-user">
-            <div class="lb-avatar"
+            <div
+              class="lb-avatar"
               :style="{ '--avatar-bg': `linear-gradient(135deg, oklch(0.55 0.2 ${r.hue}), oklch(0.4 0.18 ${(r.hue + 80) % 360}))` }"
-            />
+              :aria-label="`${r.user} avatar`"
+            >{{ r.avatar }}</div>
             {{ r.user }}
           </div>
           <span class="lb-game">{{ r.game }}</span>

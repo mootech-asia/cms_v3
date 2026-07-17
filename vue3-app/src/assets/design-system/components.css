@@ -159,7 +159,7 @@
 
 .ui-tab--underline:hover { color: var(--text); }
 .ui-tab--underline.active,
-.ui-tab--underline[aria-selected="true"] { color: var(--accent-2); }
+.ui-tab--underline[aria-selected="true"] { color: var(--accent-text); }
 
 .ui-tab--underline.active::after,
 .ui-tab--underline[aria-selected="true"]::after {

@@ -119,6 +119,7 @@ const WINNERS = Array.from({ length: 18 }, (_, i) => ({
   bet:    (10 + (i * 7)  % 200).toFixed(2),
   mult:   (2  + (i * 13) % 480).toFixed(2),
   payout: ((10 + (i * 7) % 200) * (2 + (i * 13) % 480)).toFixed(2),
+  avatar: ['CK','NV','BB','MR','VR','HY','LP','AK','EC','KD','SB','RN','QP','FR','ZN','DX','HS','VX'][i],
   hue: (i * 47) % 360
 }));
 

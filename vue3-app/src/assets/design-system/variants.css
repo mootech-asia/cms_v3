@@ -105,7 +105,7 @@
 ).active {
   border-color: var(--accent);
   background: color-mix(in oklch, var(--accent) 13%, var(--ui-tabs-surface));
-  color: var(--accent-2);
+  color: var(--accent-text);
 }
 
 :is(:root, [data-design-preview])[data-ui-form]:not([data-ui-form="v1"]) :is(

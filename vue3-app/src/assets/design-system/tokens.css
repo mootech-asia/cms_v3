@@ -87,6 +87,10 @@
   --preview-neutral-800: #22272e;
   --preview-neutral-line: rgba(255, 255, 255, 0.1);
   --preview-neutral-text: rgba(255, 255, 255, 0.52);
+  --text-on-media: #ffffff;
+  --text-on-danger: #ffffff;
+  --accent-text: var(--accent-2);
+  --balance-text: var(--warning);
   --preview-hero-bg:
     radial-gradient(ellipse 65% 90% at 34% 48%, rgba(255, 255, 255, 0.065) 0%, transparent 66%),
     linear-gradient(135deg, var(--preview-neutral-800) 0%, var(--preview-neutral-850) 48%, var(--preview-neutral-950) 100%);

@@ -186,10 +186,10 @@ const provider = ref('a');
 const applicationResult = ref(null);
 
 const providers = [
-  { id: 'a', label: 'Payment Gateway Provider A', methodCount: 4 },
-  { id: 'b', label: 'Payment Gateway Provider B', methodCount: 3 },
-  { id: 'c', label: 'Payment Gateway Provider C', methodCount: 2 },
-  { id: 'd', label: 'Payment Gateway Provider D', methodCount: 1 },
+  { id: 'a', label: 'Provider A', methodCount: 4 },
+  { id: 'b', label: 'Provider B', methodCount: 3 },
+  { id: 'c', label: 'Provider C', methodCount: 2 },
+  { id: 'd', label: 'Provider D', methodCount: 1 },
 ];
 const paymentMethods = [
   { id: 'bank', label: 'Bank Card' },

@@ -40,7 +40,7 @@
   --danger: var(--negative);
   --pos: var(--positive);
   --neg: var(--negative);
-  --tier-next: #c98732;
+  --tier-next: #d6923e;
   --status-success-bg: color-mix(in oklch, var(--positive) 14%, var(--bg-elev));
   --status-success-text: #b8eee1;
   --status-success-border: color-mix(in oklch, var(--positive) 42%, transparent);

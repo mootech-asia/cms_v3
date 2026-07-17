@@ -17,7 +17,7 @@
   --text: #eaf5ff;
   --text-mid: rgba(234, 245, 255, 0.7);
   --text-dim: rgba(234, 245, 255, 0.42);
-  --text-on-accent: #ffffff;
+  --text-on-accent: #04101a;
   --text-on-accent-soft: #eafff6;
   --icon-muted: rgba(234, 245, 255, 0.72);
   --cal-icon: var(--icon-muted);

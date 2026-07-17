@@ -28,10 +28,11 @@
 
   /* Brand and status */
   --accent: #4d4941;
-  --accent-2: #746d61;
+  --accent-2: #635d53;
   --accent-3: #b18444;
   --accent-ink: #27241f;
   --accent-shade: #faf8f2;
+  --balance-text: #705022;
   --primary-start: #625c52;
   --primary: #454139;
   --primary-end: #2c2924;
@@ -43,7 +44,7 @@
   --danger: var(--negative);
   --pos: var(--positive);
   --neg: var(--negative);
-  --tier-next: #ad6d1f;
+  --tier-next: #8a5214;
   --status-success-bg: #e5f2e9;
   --status-success-text: #1f8a5b;
   --status-success-border: #bfe6d2;
