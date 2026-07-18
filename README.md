@@ -1,3 +1,6 @@
+> **分支說明(2026-07-18)**:本分支凍結保存 v3 的**工程師框架實作**(Vue 3 + Vite,`vue3-app/`,Phase 1–9 完成)。
+> `main` 已改為純 HTML+CSS+JS 版;需要框架版(工程師形式)一律以本分支為準。
+
 # CODING AGENTS: READ THIS FIRST
 
 This is a **handoff bundle** from Claude Design (claude.ai/design).
