@@ -1,3 +1,6 @@
+> **分支說明(2026-07-18)**:本分支凍結保存 v3 **後台**現行實作(`vue3-app/studio`),隨完整 Vue 3 專案一併保存以確保可建置執行。
+> `main` 已改為純 HTML+CSS+JS 版(首波不含後台)。
+
 # CODING AGENTS: READ THIS FIRST
 
 This is a **handoff bundle** from Claude Design (claude.ai/design).
