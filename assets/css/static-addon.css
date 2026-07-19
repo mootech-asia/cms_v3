@@ -1,0 +1,23 @@
+/* CMS_前台_v3 — 靜態站行為層附加樣式
+   來源：assets/js/site.js 的行為規格對照 vue3-app/src 元件時，只有下面這一條規則
+   在原始元件裡完全找不到對應（其餘全部重用 main.css 既有 class，零新增）。
+
+   CustomerServiceModal.vue 在目前的 vue3-app/src/App.vue 裡未被 import、也沒有任何
+   emit 觸發它（已用 grep 確認 —— GameModal / SignInModal 都在 App.vue 的 Modals 區塊
+   有對應 v-if，CustomerServiceModal 沒有），屬於原始碼裡的孤兒元件。但本頁面已把它
+   隱藏內嵌在每頁等待行為層，且任務規格明確要求「客服 modal」要能開啟，所以補一顆
+   全站固定位置的客服按鈕作為觸發點（沿用 main.css 既有的 .tb-icon-btn 圓形按鈕視覺，
+   只補這裡沒有的「固定定位」）。 */
+.cms-cs-fab {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 150;
+  width: 46px;
+  height: 46px;
+  border-radius: 999px;
+}
+
+@media (max-width: 720px) {
+  .cms-cs-fab { bottom: 76px; }
+}
