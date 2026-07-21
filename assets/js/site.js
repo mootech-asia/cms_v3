@@ -520,24 +520,26 @@
   function hideModalEl(el) { if (el) el.style.display = 'none'; }
 
   function gameModalHTML(game) {
+    var categoryLabel = tr('t.modal.game.category.' + game.category, game.category);
+    var desc = tr('t.modal.game.descTemplate', '{title} is a {category} game from {provider}. Spin volatile reels, stack multipliers, and bank wins instantly to your crypto balance. Provably fair on every round.')
+      .replace('{title}', escapeHtml(game.title)).replace('{category}', escapeHtml(categoryLabel)).replace('{provider}', escapeHtml(game.provider));
     return '<div class="modal-head">' +
         '<div style="display:flex;align-items:center;gap:10px">' +
           '<div style="font-family:var(--font-display);font-weight:700;font-size:17px">' + escapeHtml(game.title) + '</div>' +
           '<span class="gcard-provider" style="font-size:12px">' + escapeHtml(game.provider) + '</span>' +
         '</div>' +
-        '<button type="button" class="modal-close" aria-label="Close">' + CLOSE_ICON + '</button>' +
+        '<button type="button" class="modal-close" aria-label="' + escapeAttr(tr('t.modal.close', 'Close')) + '">' + CLOSE_ICON + '</button>' +
       '</div>' +
       '<div class="modal-body">' +
-        '<div class="game-modal-art">[ ' + escapeHtml(String(game.title).toUpperCase()) + ' GAMEPLAY PREVIEW ]</div>' +
-        '<div style="color:var(--text-mid);font-size:13.5px;line-height:1.6">' + escapeHtml(game.title) + ' is a ' + escapeHtml(game.category) + ' game from ' + escapeHtml(game.provider) + '. ' +
-          'Spin volatile reels, stack multipliers, and bank wins instantly to your crypto balance. Provably fair on every round.</div>' +
+        '<div class="game-modal-art">[ ' + escapeHtml(String(game.title).toUpperCase()) + ' ' + escapeHtml(tr('t.modal.game.previewSuffix', 'GAMEPLAY PREVIEW')) + ' ]</div>' +
+        '<div style="color:var(--text-mid);font-size:13.5px;line-height:1.6">' + desc + '</div>' +
         '<div class="game-modal-stats">' +
-          '<div class="game-modal-stat"><div class="game-modal-stat-label">RTP</div><div class="game-modal-stat-val">' + escapeHtml(game.rtp) + '%</div></div>' +
-          '<div class="game-modal-stat"><div class="game-modal-stat-label">Max win</div><div class="game-modal-stat-val">' + escapeHtml(game.maxWin) + '</div></div>' +
-          '<div class="game-modal-stat"><div class="game-modal-stat-label">Volatility</div><div class="game-modal-stat-val">High</div></div>' +
+          '<div class="game-modal-stat"><div class="game-modal-stat-label">' + escapeHtml(tr('t.modal.game.rtp', 'RTP')) + '</div><div class="game-modal-stat-val">' + escapeHtml(game.rtp) + '%</div></div>' +
+          '<div class="game-modal-stat"><div class="game-modal-stat-label">' + escapeHtml(tr('t.modal.game.maxWin', 'Max win')) + '</div><div class="game-modal-stat-val">' + escapeHtml(game.maxWin) + '</div></div>' +
+          '<div class="game-modal-stat"><div class="game-modal-stat-label">' + escapeHtml(tr('t.modal.game.volatility', 'Volatility')) + '</div><div class="game-modal-stat-val">' + escapeHtml(tr('t.modal.game.volatilityHigh', 'High')) + '</div></div>' +
         '</div>' +
       '</div>' +
-      '<div class="modal-foot"><button type="button" class="btn">Demo</button><button type="button" class="btn primary">Play for real →</button></div>';
+      '<div class="modal-foot"><button type="button" class="btn">' + escapeHtml(tr('t.modal.game.demo', 'Demo')) + '</button><button type="button" class="btn primary">' + escapeHtml(tr('t.modal.game.playReal', 'Play for real →')) + '</button></div>';
   }
   function openGameModal(game) {
     var el = document.getElementById('cms-modal-game');
@@ -550,31 +552,31 @@
   var SIGNIN_STATE = { tab: 'signin', email: 'player@100.gg', username: '' };
   function signInModalHTML(state) {
     var tab = state.tab;
-    var headTitle = tab === 'forgot' ? 'Forgot Password' : (tab === 'signin' ? 'Welcome back' : 'Create your account');
-    var head = '<div class="modal-head"><div style="font-family:var(--font-display);font-weight:700;font-size:17px">' + headTitle + '</div>' +
-      '<button type="button" class="modal-close" aria-label="Close">' + CLOSE_ICON + '</button></div>';
+    var headTitle = tab === 'forgot' ? tr('t.modal.signin.forgotPasswordTitle', 'Forgot Password') : (tab === 'signin' ? tr('t.modal.signin.welcomeBack', 'Welcome back') : tr('t.modal.signin.createAccountTitle', 'Create your account'));
+    var head = '<div class="modal-head"><div style="font-family:var(--font-display);font-weight:700;font-size:17px">' + escapeHtml(headTitle) + '</div>' +
+      '<button type="button" class="modal-close" aria-label="' + escapeAttr(tr('t.modal.close', 'Close')) + '">' + CLOSE_ICON + '</button></div>';
     var body;
     if (tab === 'forgot') {
       body = '<form data-role="cms-form">' +
-          '<div class="field"><label>Email</label><input type="email" name="email" placeholder="Enter your email" value="' + escapeAttr(state.email) + '"></div>' +
-          '<button type="submit" class="reset-btn">Send Reset Link</button>' +
-          '<div class="signin-foot">Remember your password? <a href="#" data-tab="signin">Back to Login</a></div>' +
+          '<div class="field"><label>' + escapeHtml(tr('t.modal.signin.emailLabel', 'Email')) + '</label><input type="email" name="email" placeholder="' + escapeAttr(tr('t.modal.signin.resetEmailPlaceholder', 'Enter your email')) + '" value="' + escapeAttr(state.email) + '"></div>' +
+          '<button type="submit" class="reset-btn">' + escapeHtml(tr('t.modal.signin.sendResetLink', 'Send Reset Link')) + '</button>' +
+          '<div class="signin-foot">' + escapeHtml(tr('t.modal.signin.rememberPassword', 'Remember your password?')) + ' <a href="#" data-tab="signin">' + escapeHtml(tr('t.modal.signin.backToLogin', 'Back to Login')) + '</a></div>' +
         '</form>';
     } else {
       body = '<div class="signin-tabs">' +
-          '<button type="button" class="signin-tab' + (tab === 'signin' ? ' active' : '') + '" data-tab="signin">Sign in</button>' +
-          '<button type="button" class="signin-tab' + (tab === 'register' ? ' active' : '') + '" data-tab="register">Register</button>' +
+          '<button type="button" class="signin-tab' + (tab === 'signin' ? ' active' : '') + '" data-tab="signin">' + escapeHtml(tr('t.modal.signin.signInTab', 'Sign in')) + '</button>' +
+          '<button type="button" class="signin-tab' + (tab === 'register' ? ' active' : '') + '" data-tab="register">' + escapeHtml(tr('t.nav.Register', 'Register')) + '</button>' +
         '</div>' +
         '<form data-role="cms-form">' +
-          (tab === 'register' ? '<div class="field"><label>Username</label><input name="username" placeholder="player_one" value="' + escapeAttr(state.username) + '"></div>' : '') +
-          '<div class="field"><label>Email</label><input type="email" name="email" placeholder="you@email.com" value="' + escapeAttr(state.email) + '"></div>' +
-          '<div class="field"><label>Password</label><input type="password" name="pw" placeholder="••••••••"></div>' +
-          (tab === 'register' ? '<div class="field"><label style="display:flex;align-items:center;gap:8px;color:var(--text-mid)"><input type="checkbox" checked style="margin:0"><span style="font-size:12px">I\'m 18+ and accept the Terms</span></label></div>' : '') +
-          '<button type="submit" class="btn primary" style="width:100%;padding:12px;margin-top:6px">' + (tab === 'signin' ? 'Sign in →' : 'Create account →') + '</button>' +
+          (tab === 'register' ? '<div class="field"><label>' + escapeHtml(tr('t.modal.signin.usernameLabel', 'Username')) + '</label><input name="username" placeholder="player_one" value="' + escapeAttr(state.username) + '"></div>' : '') +
+          '<div class="field"><label>' + escapeHtml(tr('t.modal.signin.emailLabel', 'Email')) + '</label><input type="email" name="email" placeholder="you@email.com" value="' + escapeAttr(state.email) + '"></div>' +
+          '<div class="field"><label>' + escapeHtml(tr('t.modal.signin.passwordLabel', 'Password')) + '</label><input type="password" name="pw" placeholder="••••••••"></div>' +
+          (tab === 'register' ? '<div class="field"><label style="display:flex;align-items:center;gap:8px;color:var(--text-mid)"><input type="checkbox" checked style="margin:0"><span style="font-size:12px">' + escapeHtml(tr('t.modal.signin.ageTerms', "I'm 18+ and accept the Terms")) + '</span></label></div>' : '') +
+          '<button type="submit" class="btn primary" style="width:100%;padding:12px;margin-top:6px">' + escapeHtml(tab === 'signin' ? tr('t.modal.signin.signInSubmit', 'Sign in →') : tr('t.modal.signin.createAccountSubmit', 'Create account →')) + '</button>' +
         '</form>' +
         '<div class="signin-foot">' + (tab === 'signin'
-          ? 'No account? <a href="#" data-tab="register">Register</a> · <a href="#" data-tab="forgot">Forgot?</a>'
-          : 'Already a player? <a href="#" data-tab="signin">Sign in</a>') + '</div>';
+          ? escapeHtml(tr('t.modal.signin.noAccount', 'No account?')) + ' <a href="#" data-tab="register">' + escapeHtml(tr('t.nav.Register', 'Register')) + '</a> · <a href="#" data-tab="forgot">' + escapeHtml(tr('t.modal.signin.forgot', 'Forgot?')) + '</a>'
+          : escapeHtml(tr('t.modal.signin.alreadyPlayer', 'Already a player?')) + ' <a href="#" data-tab="signin">' + escapeHtml(tr('t.modal.signin.signInTab', 'Sign in')) + '</a>') + '</div>';
     }
     return head + '<div class="modal-body">' + body + '</div>';
   }
