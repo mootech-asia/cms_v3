@@ -182,4 +182,7 @@ file://）、`npm run verify`（結構檢查）、`npm run verify:behavior`（Pl
 
 Vue 3 重構 Phase 1–9 全部完成（完整版保存於分支 `工程師框架版本`）。
 2026-07-19：main 前台已切換為純 HTML+CSS+JS 靜態站，設計後台（`vue3-app/` → `/studio`）
-維持跟主站一起部署，兩者皆已驗證。下一步依需求決定：新功能、視覺調整、或另起新專案。
+維持跟主站一起部署，兩者皆已驗證。
+2026-07-21～22：靜態前台補上 i18n 4 語系機制（zh/en/ko/th，`assets/js/i18n.js` + `site.js` `tr()`，
+含三個 modal 自由文字翻譯），並新增純 HTML `/studio`（皮膚選擇器 + 真實前台預覽，commit `b23a0ca`）
+與主站一起部署。下一步依需求決定：新功能、視覺調整、或另起新專案。
